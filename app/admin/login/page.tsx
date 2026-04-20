@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { Mail, LockKeyhole, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, LockKeyhole, ArrowRight, Loader2, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -23,9 +24,7 @@ export default function LoginPage() {
 
     if (error) {
       if (error.message.includes("Invalid login")) {
-        setError("Email atau password salah. Silakan periksa kembali.");
-      } else if (error.message.includes("Email not confirmed")) {
-        setError("Email belum dikonfirmasi. Periksa inbox Anda.");
+        setError("Kredensial salah. Pastikan Email & Password benar.");
       } else {
         setError(error.message);
       }
@@ -36,132 +35,114 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-6 relative overflow-hidden font-sans">
-
-      {/* Ambient Blobs */}
-      <div className="absolute top-[-15%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-100/50 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
+      
+      {/* Decorative Blurs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-violet-500/10 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
-
-        {/* Header */}
+        
+        {/* Header with Prettified Logo */}
         <div className="text-center mb-10">
-          <div className="relative mx-auto w-24 h-24 mb-6">
+           <div className="relative mx-auto w-20 h-20 bg-white rounded-full p-1.5 shadow-2xl shadow-indigo-200 ring-4 ring-white mb-6 flex items-center justify-center overflow-hidden">
             <Image
               src="/logo.jpg"
-              alt="Logo Pembinaan Kejaksaan Republik Indonesia"
-              width={96}
-              height={96}
-              className="w-24 h-24 object-contain drop-shadow-xl"
+              alt="Logo Instansi"
+              width={80}
+              height={80}
+              className="w-full h-full object-cover rounded-full"
               priority
             />
           </div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase italic leading-none mb-2">
-            Admin Portal
+          <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase italic leading-none mb-2">
+            Admin Workspace
           </h1>
-          <p className="text-slate-400 font-medium text-sm">
-            Sistem Monitoring Tunjangan Kinerja
+          <p className="text-slate-500 font-bold text-sm tracking-wide">
+            Control Panel SIMantu
           </p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white/90 backdrop-blur-2xl p-8 sm:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/80 border border-white/80">
-
-          {/* Error */}
+        {/* Login Card */}
+        <div className="bg-white/80 backdrop-blur-xl p-8 sm:p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-white">
+          
           {error && (
-            <div className="mb-6 bg-rose-50 border border-rose-200 p-4 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="flex items-start gap-3">
-                <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping mt-1.5 shrink-0" />
-                <p className="text-sm font-bold text-rose-600 leading-snug">{error}</p>
+            <div className="mb-6 bg-rose-50 border border-rose-200 p-4 rounded-2xl animate-in fade-in zoom-in duration-200">
+              <div className="flex items-center gap-3">
+                <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+                <p className="text-sm font-bold text-rose-700 leading-snug">{error}</p>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-
-            {/* Email */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            
             <div className="group">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 italic group-focus-within:text-indigo-600 transition-colors">
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 group-focus-within:text-indigo-600 transition-colors">
                 Alamat Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail size={18} className="text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
+                  <Mail size={20} className="text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
                 </div>
                 <input
                   type="email"
                   required
-                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-900 placeholder:text-slate-300 placeholder:font-normal"
-                  placeholder="admin@instansi.go.id"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-900 placeholder:text-slate-300 placeholder:font-normal"
+                  placeholder="admin@kn-soppeng.go.id"
                 />
               </div>
             </div>
 
-            {/* Password */}
             <div className="group">
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 italic group-focus-within:text-indigo-600 transition-colors">
-                Password
+              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2 mb-2 group-focus-within:text-indigo-600 transition-colors">
+                Password Akses
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <LockKeyhole size={18} className="text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
+                  <LockKeyhole size={20} className="text-slate-300 group-focus-within:text-indigo-500 transition-colors" />
                 </div>
                 <input
                   type={showPass ? "text" : "password"}
                   required
-                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-900 placeholder:text-slate-300 placeholder:font-normal"
+                  className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-bold text-slate-900 placeholder:text-slate-300 placeholder:font-normal"
                   placeholder="••••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-700 transition-colors"
                 >
-                  {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              className="
-                relative w-full overflow-hidden bg-gradient-to-r from-indigo-600 to-violet-600 text-white
-                py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl shadow-indigo-200
-                hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all active:translate-y-0
-                disabled:opacity-70 disabled:hover:translate-y-0 mt-2 flex items-center justify-center gap-3
-              "
+              className="relative w-full overflow-hidden bg-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest shadow-xl hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-900/20 transition-all active:translate-y-0 disabled:opacity-70 disabled:hover:translate-y-0 flex items-center justify-center gap-3 group mt-4"
             >
-              {/* Shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700" />
-
               {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Memverifikasi...
-                </>
+                <><Loader2 size={20} className="animate-spin text-indigo-400" /> Memverifikasi...</>
               ) : (
-                <>
-                  Masuk Sistem
-                  <ArrowRight size={18} />
-                </>
+                <>Otorisasi Masuk <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" /></>
               )}
             </button>
           </form>
         </div>
 
-        {/* Footer note */}
-        <p className="text-center text-xs text-slate-400 font-medium mt-6">
-          Akses terbatas untuk admin yang berwenang.
-        </p>
+        {/* Back to Home Link */}
+        <div className="mt-8 text-center">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 transition-colors bg-white/50 px-5 py-2.5 rounded-full border border-slate-200 shadow-sm backdrop-blur-sm">
+            <ArrowLeft size={16} /> Kembali ke Halaman Publik
+          </Link>
+        </div>
+
       </div>
     </div>
   );
