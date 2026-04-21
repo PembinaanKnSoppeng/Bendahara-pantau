@@ -51,6 +51,9 @@ export default function PublicPage() {
   const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [prevStep, setPrevStep] = useState<number | null>(null);
+  
+  // STATE BARU UNTUK CUSTOM MODAL BANTUAN
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -130,6 +133,45 @@ export default function PublicPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#F8FAFC] font-sans selection:bg-emerald-100 selection:text-emerald-900 relative overflow-hidden">
       {showConfetti && <Confetti />}
+
+      {/* CUSTOM HELP MODAL */}
+      {showHelpModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          {/* Backdrop Blur */}
+          <div 
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+            onClick={() => setShowHelpModal(false)}
+          />
+          
+          {/* Modal Box */}
+          <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] p-8 sm:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex flex-col items-center text-center animate-fade-slide-up">
+            
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowHelpModal(false)}
+              className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-50 rounded-full transition-colors duration-300"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-emerald-100/50">
+              <HelpCircle size={36} className="text-emerald-500 animate-wiggle" />
+            </div>
+            
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-3">Butuh Bantuan?</h3>
+            <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8">
+              Hai! Jika Anda memiliki kendala atau pertanyaan seputar proses pencairan Tukin, jangan ragu untuk menghubungi <strong className="text-slate-700">Tim Bendahara</strong> kami.
+            </p>
+            
+            <button 
+              onClick={() => setShowHelpModal(false)}
+              className="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)] hover:bg-emerald-500 hover:shadow-[0_10px_20px_-10px_rgba(16,185,129,0.5)] hover:-translate-y-1 transition-all duration-300 active:translate-y-0"
+            >
+              Baik, Saya Mengerti
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* FRIENDLY BACKGROUND BLOBS */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-emerald-100/50 to-transparent blur-[120px] rounded-full pointer-events-none" />
@@ -408,7 +450,7 @@ export default function PublicPage() {
 
       {/* FLOATING HELP BUTTON */}
       <button 
-        onClick={() => alert("Hai! Jika ada kendala atau pertanyaan seputar pencairan, silakan hubungi tim Bendahara ya.")}
+        onClick={() => setShowHelpModal(true)}
         className="fixed bottom-8 right-8 px-5 py-4 bg-slate-900 text-white rounded-full flex items-center gap-3 shadow-[0_10px_30px_rgb(0,0,0,0.15)] hover:bg-emerald-500 hover:-translate-y-1 hover:shadow-emerald-500/30 transition-all duration-300 ease-out active:scale-95 z-50 group"
       >
         <HelpCircle size={20} />
