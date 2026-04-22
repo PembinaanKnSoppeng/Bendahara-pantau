@@ -4,6 +4,9 @@ import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
 
+// 1. TAMBAHKAN IMPORT INI
+import IosInstallPrompt from "./IosInstallPrompt";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -38,6 +41,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <Analytics />
+        
+        {/* 2. PANGGIL KOMPONENNYA DI SINI */}
+        <IosInstallPrompt />
+        
       </body>
     </html>
   );
