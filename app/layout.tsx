@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// 1. TAMBAHKAN IMPORT INI DI BAGIAN ATAS
 import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
@@ -17,7 +16,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SIMANTU",
-  description: "Sistem Monitoring Tukin",
+  description: "Sistem Monitoring Tukin & Uang Makan",
+  manifest: "/manifest.ts", // Optional explicit link
+};
+
+// Pengaturan warna tema di address bar Chrome / Safari HP untuk PWA
+export const viewport: Viewport = {
+  themeColor: "#10b981", 
 };
 
 export default function RootLayout({
@@ -27,15 +32,12 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}
-        
-        {/* 2. TAMBAHKAN KOMPONEN ANALYTICS DI SINI */}
         <Analytics />
-        
       </body>
     </html>
   );
