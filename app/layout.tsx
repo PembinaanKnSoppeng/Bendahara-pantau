@@ -20,7 +20,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SIMANTU",
   description: "Sistem Monitoring Tukin & Uang Makan",
-  manifest: "/manifest.ts", // Optional explicit link
 };
 
 // Pengaturan warna tema di address bar Chrome / Safari HP untuk PWA

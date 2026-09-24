@@ -4,11 +4,28 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import {
-  Check, X, Calendar, BellRing, Share2, CheckCheck,
-  Wifi, WifiOff, Clock, Sparkles, HelpCircle, LayoutDashboard,
+  Check, X, Calendar, BellRing, CheckCheck,
+  WifiOff, Clock, Sparkles, HelpCircle, LayoutDashboard,
   RefreshCcw, HeartPulse, ChevronRight, Wallet, Utensils, Star, History
 } from "lucide-react";
 import Image from "next/image";
+
+interface StatusUangMakan {
+  id: number;
+  periode?: string;
+  current_step?: number;
+  estimasi?: string;
+  catatan?: string;
+  is_rejected?: boolean;
+  updated_at?: string;
+}
+
+interface ArsipItem {
+  id?: number;
+  periode: string;
+  tanggal_cair: string;
+  jenis: string;
+}
 
 const STEPS = [
   { id: 1, title: "Rekapitulasi Absensi", desc: "Data kehadiran & potongan pegawai", icon: "📋", eta: "1-2 Hari" },
@@ -21,24 +38,42 @@ const STEPS = [
   { id: 8, title: "SP2D Terbit", desc: "Dana akan masuk ke rekening masing-masing! 🎉", icon: "💰", eta: "Cair!" },
 ];
 
+const CONFETTI_PIECES = Array.from({ length: 80 }, (_, i) => ({
+  id: i,
+  left: `${(i * 37) % 100}%`,
+  delay: `${((i * 13) % 20) / 10}s`,
+  duration: `${2.5 + ((i * 17) % 25) / 10}s`,
+  scale: (0.5 + ((i * 19) % 8) / 10).toFixed(2),
+  colorIndex: i % 5,
+}));
+
 function Confetti() {
-  const pieces = Array.from({ length: 80 }, (_, i) => i);
   const colors = ["#f59e0b", "#fbbf24", "#fcd34d", "#fb923c", "#f472b6"];
   return (
     <div className="fixed inset-0 pointer-events-none z-[100] overflow-hidden">
-      {pieces.map((i) => (
-        <div key={i} className="absolute w-3 h-3 rounded-full animate-confetti shadow-sm" style={{ left: `${Math.random() * 100}%`, top: `-20px`, backgroundColor: colors[i % colors.length], animationDelay: `${Math.random() * 1.5}s`, animationDuration: `${2.5 + Math.random() * 2}s`, transform: `scale(${Math.random() * 0.8 + 0.5})` }} />
+      {CONFETTI_PIECES.map((piece) => (
+        <div
+          key={piece.id}
+          className="absolute w-3 h-3 rounded-full animate-confetti shadow-sm"
+          style={{
+            left: piece.left,
+            top: "-20px",
+            backgroundColor: colors[piece.colorIndex],
+            animationDelay: piece.delay,
+            animationDuration: piece.duration,
+            transform: `scale(${piece.scale})`,
+          }}
+        />
       ))}
     </div>
   );
 }
 
 export default function UangMakanPublicPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<StatusUangMakan | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const [copied, setCopied] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [prevStep, setPrevStep] = useState<number | null>(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
@@ -46,13 +81,13 @@ export default function UangMakanPublicPage() {
   const [rating, setRating] = useState(0);
   const [hasRated, setHasRated] = useState(false);
   const [showArsipModal, setShowArsipModal] = useState(false);
-  const [arsipData, setArsipData] = useState<any[]>([]);
+  const [arsipData, setArsipData] = useState<ArsipItem[]>([]);
 
   const fetchStatus = useCallback(async () => {
     try {
       const { data: res, error: err } = await supabase.from("status_uang_makan_global").select("*").eq("id", 1).single();
       if (err || !res) throw err;
-      setData(res);
+      setData(res as StatusUangMakan);
       setError(false);
       
       if (typeof window !== "undefined" && res.periode) {
@@ -66,10 +101,11 @@ export default function UangMakanPublicPage() {
 
   const fetchArsip = async () => {
     const { data: res } = await supabase.from("arsip_pencairan").select("*").eq("jenis", "Uang Makan").order("tanggal_cair", { ascending: false });
-    if (res) setArsipData(res);
+    if (res) setArsipData(res as ArsipItem[]);
   };
 
   const submitRating = async (val: number) => {
+    if (!data?.periode) return;
     setRating(val);
     await supabase.from("rating_kepuasan").insert([{ periode: data.periode, jenis: "Uang Makan", rating: val }]);
     localStorage.setItem(`rated_uang_makan_${data.periode}`, "true");
@@ -79,23 +115,25 @@ export default function UangMakanPublicPage() {
   useEffect(() => {
     fetchStatus();
     const channel = supabase.channel("realtime-uang-makan").on("postgres_changes", { event: "UPDATE", schema: "public", table: "status_uang_makan_global" }, (payload) => {
-      setData(payload.new); setIsOnline(true);
+      setData(payload.new as StatusUangMakan); setIsOnline(true);
     }).subscribe((status) => setIsOnline(status === "SUBSCRIBED"));
     return () => { supabase.removeChannel(channel); };
   }, [fetchStatus]);
 
+  const currentStep = data?.current_step;
   useEffect(() => {
-    if (!data) return;
-    if (prevStep !== null && prevStep < 8 && data.current_step === 8) {
-      setShowConfetti(true); setTimeout(() => setShowConfetti(false), 8000);
+    if (currentStep === undefined) return;
+    let timer: NodeJS.Timeout | undefined;
+    if (prevStep !== null && prevStep < 8 && currentStep === 8) {
+      setShowConfetti(true);
+      timer = setTimeout(() => setShowConfetti(false), 8000);
     }
-    setPrevStep(data.current_step);
-  }, [data?.current_step]);
+    setPrevStep(currentStep);
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [currentStep, prevStep]);
 
-  const handleShare = async () => {
-    await navigator.clipboard.writeText(window.location.href);
-    setCopied(true); setTimeout(() => setCopied(false), 2000);
-  };
 
   if (loading) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] gap-6">
@@ -117,7 +155,7 @@ export default function UangMakanPublicPage() {
   const safeStep = data ? Math.max(1, Math.min(8, data.current_step ?? 1)) : 1;
   const progressPct = Math.round((safeStep / 8) * 100);
   const currentStepData = STEPS[safeStep - 1];
-  const isDisbursed = safeStep === 8 && !data.is_rejected;
+  const isDisbursed = safeStep === 8 && !data?.is_rejected;
   const displayEstimasi = data?.estimasi ? data.estimasi : currentStepData.eta;
 
   return (
@@ -208,7 +246,7 @@ export default function UangMakanPublicPage() {
             <div className="relative z-10 flex flex-col h-full justify-between">
               <div className="flex flex-wrap items-center gap-3 mb-8">
                 <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-amber-50 border border-amber-100 rounded-full shadow-sm relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-r from-amber-100/0 via-white/60 to-amber-100/0 translate-x-[-100%] animate-shimmer" /><span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" /><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" /></span><span className="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-700 relative z-10">Posisi Saat Ini</span></div>
-                {!isDisbursed && !data.is_rejected && (<span className="px-4 py-2 bg-slate-50 text-slate-600 border border-slate-100 rounded-full text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-sm"><Clock size={14} className="text-slate-400 animate-pulse" /> Estimasi: {displayEstimasi}</span>)}
+                {!isDisbursed && !data?.is_rejected && (<span className="px-4 py-2 bg-slate-50 text-slate-600 border border-slate-100 rounded-full text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-sm"><Clock size={14} className="text-slate-400 animate-pulse" /> Estimasi: {displayEstimasi}</span>)}
               </div>
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left mb-6 sm:mb-0">
                 <div key={safeStep} className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/60 rounded-[2rem] flex items-center justify-center text-5xl sm:text-6xl shrink-0 shadow-inner animate-float">{currentStepData.icon}</div>
@@ -311,21 +349,6 @@ export default function UangMakanPublicPage() {
         <HelpCircle size={20} />
         <span className="text-sm font-bold pr-1 hidden sm:inline">Pusat Bantuan</span>
       </button>
-
-      <style>{`
-        @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
-        @keyframes wiggle { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-        @keyframes shimmer { 100% { transform: translateX(100%); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
-        .animate-shimmer { animation: shimmer 2s infinite ease-in-out; }
-        .animate-float { animation: float 4s infinite ease-in-out; }
-        .animate-wiggle { animation: wiggle 1s infinite ease-in-out; }
-        .animate-fade-slide-up { animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-      `}</style>
     </div>
   );
 }

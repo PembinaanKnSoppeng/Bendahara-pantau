@@ -54,10 +54,28 @@ function ConfirmModal({ title, desc, confirmLabel, confirmClass, onConfirm, onCa
   );
 }
 
+interface StatusUangMakan {
+  id: number;
+  periode?: string;
+  current_step?: number;
+  estimasi?: string;
+  catatan?: string;
+  is_rejected?: boolean;
+  updated_at?: string;
+}
+
+interface RatingItem {
+  id?: number;
+  periode: string;
+  jenis: string;
+  rating: number;
+  created_at: string;
+}
+
 type HistoryEntry = { step: number; label: string; time: string; type: "advance" | "back" | "reject" | "info" | "reset" };
 
 export default function AdminUangMakanDashboard() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<StatusUangMakan | null>(null);
   const [periodeInput, setPeriodeInput] = useState("");
   const [estimasiInput, setEstimasiInput] = useState("");
   const [catatanInput, setCatatanInput] = useState("");
@@ -70,7 +88,7 @@ export default function AdminUangMakanDashboard() {
   }>(null);
 
   // STATE RATING
-  const [ratings, setRatings] = useState<any[]>([]);
+  const [ratings, setRatings] = useState<RatingItem[]>([]);
   const avgRating = ratings.length > 0 ? (ratings.reduce((acc, curr) => acc + curr.rating, 0) / ratings.length).toFixed(1) : "0.0";
 
   const router = useRouter();
@@ -79,33 +97,33 @@ export default function AdminUangMakanDashboard() {
     setHistory((prev) => [{ ...entry, time: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) }, ...prev.slice(0, 19)]);
   };
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) router.push("/admin/login");
-      else fetchStatus();
-    };
-    checkUser();
-  }, [router]);
-
   const fetchStatus = useCallback(async () => {
     const { data: res } = await supabase.from("status_uang_makan_global").select("*").eq("id", 1).single();
     if (res) {
-      setData(res);
+      setData(res as StatusUangMakan);
       setPeriodeInput(res.periode ?? "");
       setEstimasiInput(res.estimasi ?? "");
       setCatatanInput(res.catatan ?? "");
     }
 
     const { data: ratingData } = await supabase.from("rating_kepuasan").select("*").eq("jenis", "Uang Makan").order("created_at", { ascending: false });
-    if (ratingData) setRatings(ratingData);
+    if (ratingData) setRatings(ratingData as RatingItem[]);
 
     setLoading(false);
   }, []);
 
-  const handleUpdate = async (updates: any) => {
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) router.push("/admin/login");
+      else await fetchStatus();
+    };
+    checkUser();
+  }, [router, fetchStatus]);
+
+  const handleUpdate = async (updates: Partial<StatusUangMakan>) => {
     setSaving(true);
-    await supabase.from("status_uang_makan_global").update({ ...updates, updated_at: new Date() }).eq("id", 1);
+    await supabase.from("status_uang_makan_global").update({ ...updates, updated_at: new Date().toISOString() }).eq("id", 1);
     await fetchStatus();
     setSaving(false);
   };
@@ -417,16 +435,6 @@ export default function AdminUangMakanDashboard() {
           </div>
         </div>
       </main>
-
-      <style>{`
-        @keyframes fadeSlideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
-        @keyframes wiggle { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-        .animate-fade-slide-up { animation: fadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .animate-wiggle { animation: wiggle 1s infinite ease-in-out; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-      `}</style>
     </div>
   );
 }

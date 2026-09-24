@@ -13,7 +13,7 @@ export default function IosInstallPrompt() {
     
     // 2. Deteksi apakah aplikasi SUDAH di-install (jalan di mode Standalone)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
-                         ('standalone' in window.navigator && (window.navigator as any).standalone === true);
+                         ('standalone' in window.navigator && (window.navigator as Navigator & { standalone?: boolean }).standalone === true);
 
     // Jika pengguna pakai iOS dan BELUM install, munculkan pop-up setelah 3 detik
     if (isIosDevice && !isStandalone) {
