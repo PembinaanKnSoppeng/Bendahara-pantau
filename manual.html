@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Petunjuk Operasional Program Aplikasi Sistem Informasi SI MANTU</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 18mm 20mm 20mm 20mm;
+      @bottom-right {
+        content: "Halaman " counter(page);
+        font-size: 8.5pt;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #64748b;
+      }
+      @bottom-left {
+        content: "Petunjuk Operasional Aplikasi SI MANTU - Kejaksaan Negeri Soppeng";
+        font-size: 8pt;
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #94a3b8;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      line-height: 1.6;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page-break {
+      page-break-before: always;
+      clear: both;
+    }
+
+    /* COVER PAGE */
+    .cover-container {
+      height: 96vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      padding: 36px 28px;
+      border: 3px double #065f46;
+      background: #ffffff;
+    }
+
+    .cover-header {
+      width: 100%;
+    }
+
+    .instansi-title {
+      font-size: 14pt;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #064e3b;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .satker-title {
+      font-size: 18pt;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #047857;
+      margin: 4px 0 0 0;
+      text-transform: uppercase;
+    }
+
+    .address-title {
+      font-size: 8.5pt;
+      color: #64748b;
+      margin-top: 4px;
+      border-bottom: 2px solid #065f46;
+      padding-bottom: 12px;
+    }
+
+    .cover-body {
+      margin: auto 0;
+      width: 100%;
+      padding: 20px 0;
+    }
+
+    .cover-logo {
+      width: 105px;
+      height: 105px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 18px;
+    }
+
+    .doc-type-badge {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #059669;
+      padding: 4px 14px;
+      border-radius: 4px;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .doc-main-title {
+      font-size: 19pt;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.25;
+      margin: 10px 0;
+      text-transform: uppercase;
+    }
+
+    .doc-sub-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #059669;
+      margin-top: 5px;
+      letter-spacing: 0.5px;
+    }
+
+    .divider-line {
+      width: 120px;
+      height: 3px;
+      background: #059669;
+      margin: 16px auto;
+      border-radius: 1px;
+    }
+
+    .cover-footer {
+      width: 100%;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 15px;
+    }
+
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 12px 22px;
+      border-radius: 6px;
+      display: inline-block;
+      text-align: left;
+      font-size: 9pt;
+      line-height: 1.65;
+    }
+
+    .meta-box strong {
+      color: #0f172a;
+    }
+
+    /* GENERAL HEADINGS */
+    h1.chapter-title {
+      font-size: 15pt;
+      font-weight: 900;
+      color: #065f46;
+      border-bottom: 2px solid #059669;
+      padding-bottom: 5px;
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h2.section-title {
+      font-size: 11.5pt;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      border-left: 3.5px solid #059669;
+      padding-left: 8px;
+    }
+
+    p {
+      text-align: justify;
+      margin: 6px 0;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 9pt;
+    }
+
+    th {
+      background: #047857;
+      color: #ffffff;
+      font-weight: 700;
+      text-align: left;
+      padding: 7px 9px;
+      border: 1px solid #065f46;
+    }
+
+    td {
+      padding: 6px 9px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* BOXES & CALLOUTS */
+    .callout {
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin: 12px 0;
+      font-size: 9pt;
+    }
+
+    .callout-info {
+      background: #ecfdf5;
+      border-left: 3.5px solid #059669;
+      color: #065f46;
+    }
+
+    .callout-warning {
+      background: #fffbeb;
+      border-left: 3.5px solid #f59e0b;
+      color: #92400e;
+    }
+
+    /* STEP CARDS MOCKUP */
+    .step-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin: 12px 0;
+    }
+
+    .step-card {
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 8px 10px;
+      border-radius: 6px;
+    }
+
+    .step-card-num {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background: #047857;
+      color: white;
+      border-radius: 4px;
+      text-align: center;
+      line-height: 20px;
+      font-size: 8.5pt;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .step-card-title {
+      font-weight: 800;
+      font-size: 9.5pt;
+      color: #0f172a;
+    }
+
+    .step-card-desc {
+      font-size: 8pt;
+      color: #64748b;
+      margin-top: 3px;
+    }
+
+    /* PENGESAHAN */
+    .signature-grid {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 45px;
+    }
+
+    .signature-box {
+      width: 280px;
+      text-align: center;
+    }
+
+    .sign-space {
+      height: 70px;
+    }
+
+    table, tr, td, th, .step-card, .meta-box, .callout, .signature-grid {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* TOC */
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 6px 0;
+      font-size: 9.5pt;
+      border-bottom: 1px dotted #cbd5e1;
+      padding-bottom: 2px;
+    }
+
+    .toc-chapter {
+      font-weight: 800;
+      color: #065f46;
+      margin-top: 8px;
+    }
+
+    .toc-dots {
+      flex: 1;
+      border-bottom: 1px dotted #94a3b8;
+      margin: 0 8px 3px 8px;
+    }
+
+    ul, ol {
+      margin: 5px 0 8px 18px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 3px;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      font-size: 8.5pt;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HALAMAN COVER -->
+  <div class="cover-container">
+    <div class="cover-header">
+      <div class="instansi-title">Kejaksaan Republik Indonesia</div>
+      <div class="satker-title">Kejaksaan Negeri Soppeng</div>
+      <div class="address-title">Jl. Samudra No. 1, Watansoppeng, Kabupaten Soppeng, Sulawesi Selatan</div>
+    </div>
+
+    <div class="cover-body">
+      <img src="public/logo.jpg" class="cover-logo" alt="Logo Kejaksaan">
+      <br>
+      <div class="doc-type-badge">Petunjuk Operasional Program Aplikasi</div>
+      <div class="doc-main-title">Petunjuk Operasional<br>Sistem Informasi SI MANTU</div>
+      <div class="doc-sub-title">(Sistem Monitoring Tunjangan Kinerja & Uang Makan)</div>
+      <div class="divider-line"></div>
+      <p style="text-align: center; font-size: 9pt; color: #475569; max-width: 480px; margin: 0 auto;">
+        Pedoman teknis komprehensif bagi Pegawai (Publik) dan Administrator (Bendahara Pengeluaran) dalam pemanfaatan dan pengelolaan sistem monitoring hak keuangan secara transparan, akuntabel, dan realtime.
+      </p>
+    </div>
+
+    <div class="cover-footer">
+      <div class="meta-box">
+        <div><strong>Satuan Kerja</strong> : Kejaksaan Negeri Soppeng</div>
+        <div><strong>Penyusun</strong> : DEWA SURYA, A.Md.Kom. (Pranata Komputer)</div>
+        <div><strong>Tahun Anggaran</strong> : 2026</div>
+        <div><strong>Edisi Dokumen</strong> : Versi 2.0 (Pemutakhiran Sistem Realtime)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEMBAR PENGESAHAN -->
+  <div class="page-break"></div>
+  <div>
+    <h1 class="chapter-title" style="text-align: center; border: none; padding-bottom: 0;">LEMBAR PENGESAHAN</h1>
+    <p style="text-align: center; font-size: 9.5pt; color: #64748b; margin-top: -6px;">Nomor Dokumen: B-08/K.4.20/Cr.2/09/2026</p>
+    <div class="divider-line" style="margin: 12px auto 20px auto;"></div>
+
+    <p>
+      Dokumen <strong>Petunjuk Operasional Program Aplikasi Sistem Informasi Monitoring Tunjangan Kinerja dan Uang Makan (SI MANTU)</strong> pada Kejaksaan Negeri Soppeng ini telah disusun, diuji, dan disahkan untuk diberlakukan sebagai panduan teknis operasional dalam pelaksanaan pemantauan dan pengelolaan administrasi keuangan pegawai secara digital.
+    </p>
+
+    <table style="margin: 20px 0;">
+      <tr>
+        <th colspan="2" style="text-align: center;">IDENTITAS DOKUMEN SISTEM INFORMASI</th>
+      </tr>
+      <tr>
+        <td style="width: 35%; font-weight: bold;">Nama Sistem Informasi</td>
+        <td>SIMANTU (Sistem Monitoring Tunjangan Kinerja & Uang Makan)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Satuan Kerja / Unit</td>
+        <td>Kejaksaan Negeri Soppeng / Urusan Keuangan</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Penyusun / Pengembang</td>
+        <td>DEWA SURYA, A.Md.Kom. (Pranata Komputer Pelaksana / Terampil)</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Basis Teknologi</td>
+        <td>Next.js 16 (App Router), Supabase Realtime Database, Tailwind CSS, PWA</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Sasaran Pengguna</td>
+        <td>Seluruh Pegawai Kejaksaan Negeri Soppeng & Pengelola Keuangan</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Tanggal Ditetapkan</td>
+        <td>Watansoppeng, 24 September 2026</td>
+      </tr>
+    </table>
+
+    <div class="signature-grid">
+      <div class="signature-box">
+        <div>Ditetapkan di Watansoppeng</div>
+        <div>Pada tanggal 24 September 2026</div>
+        <div style="font-weight: bold; margin-top: 8px;">Penyusun / Pranata Komputer,</div>
+        <div class="sign-space"></div>
+        <div style="font-weight: bold; text-decoration: underline; color: #0f172a; font-size: 10.5pt;">DEWA SURYA, A.Md.Kom.</div>
+        <div style="font-size: 8.5pt; color: #64748b; margin-top: 2px;">Pranata Komputer Pelaksana / Terampil</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KATA PENGANTAR -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">KATA PENGANTAR</h1>
+  
+  <p>
+    Puji dan syukur kami panjatkan ke hadirat Tuhan Yang Maha Esa atas limpahan rahmat dan karunia-Nya, sehingga Dokumen <strong>Petunjuk Operasional Program Aplikasi Sistem Informasi Monitoring Tunjangan Kinerja dan Uang Makan (SI MANTU)</strong> pada Kejaksaan Negeri Soppeng ini dapat diselesaikan dengan baik.
+  </p>
+  <p>
+    Sistem Informasi <strong>SI MANTU</strong> dikembangkan sebagai bentuk komitmen nyata institusi Kejaksaan Negeri Soppeng dalam mendukung agenda reformasi birokrasi, khususnya dalam area penguatan akuntabilitas kinerja dan peningkatan kualitas pelayanan internal aparatur sipil negara. Melalui aplikasi berbasis web dan <em>Progressive Web App</em> (PWA) ini, seluruh jajaran pegawai dapat memantau secara langsung, transparan, dan <em>realtime</em> tahapan pencairan hak-hak keuangan mereka, yang meliputi Tunjangan Kinerja (Tukin) dan Uang Makan bulanan.
+  </p>
+  <p>
+    Buku petunjuk operasional ini disusun secara sistematis agar dapat dijadikan pedoman komprehensif bagi seluruh aparatur Kejaksaan Negeri Soppeng selaku pengguna layanan (publik), serta bagi Bendahara Pengeluaran dan operator Subbagian Pembinaan selaku pengelola sistem. Di dalamnya termuat informasi menyeluruh mengenai arsitektur sistem, kebutuhan perangkat, alur operasional 8 tahapan pencairan standar KPPN, panduan teknis antarmuka, hingga langkah pemecahan masalah.
+  </p>
+  <p>
+    Kami menyampaikan apresiasi dan terima kasih setinggi-tingginya kepada Pimpinan Kejaksaan Negeri Soppeng, Tim Keuangan Subbagian Pembinaan, serta seluruh pihak yang telah memberikan kontribusi pemikiran dan dukungan teknis. Semoga dokumen petunjuk operasional ini membawa kemanfaatan besar dalam mewujudkan tata kelola administrasi keuangan yang profesional, modern, dan tepercaya.
+  </p>
+
+  <div style="text-align: right; margin-top: 30px;">
+    <div>Watansoppeng, September 2026</div>
+    <div style="font-weight: bold; margin-top: 4px;">Penyusun,</div>
+    <div class="sign-space" style="height: 55px;"></div>
+    <div style="font-weight: bold; text-decoration: underline; color: #0f172a;">DEWA SURYA, A.Md.Kom.</div>
+    <div style="font-size: 8.5pt; color: #64748b;">Pranata Komputer Kejaksaan Negeri Soppeng</div>
+  </div>
+
+  <!-- DAFTAR ISI -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">DAFTAR ISI</h1>
+
+  <div class="toc-item toc-chapter"><span>LEMBAR PENGESAHAN</span><span>ii</span></div>
+  <div class="toc-item toc-chapter"><span>KATA PENGANTAR</span><span>iii</span></div>
+  <div class="toc-item toc-chapter"><span>DAFTAR ISI</span><span>iv</span></div>
+
+  <div class="toc-item toc-chapter"><span>BAB I: PENDAHULUAN</span><span>1</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>1.1 Latar Belakang</span><span class="toc-dots"></span><span>1</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>1.2 Maksud dan Tujuan</span><span class="toc-dots"></span><span>1</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>1.3 Ruang Lingkup Sistem</span><span class="toc-dots"></span><span>2</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>1.4 Profil Sistem Informasi SIMANTU</span><span class="toc-dots"></span><span>2</span></div>
+
+  <div class="toc-item toc-chapter"><span>BAB II: SPESIFIKASI DAN KEBUTUHAN SISTEM</span><span>3</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>2.1 Kebutuhan Perangkat Keras (Hardware)</span><span class="toc-dots"></span><span>3</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>2.2 Kebutuhan Perangkat Lunak (Software)</span><span class="toc-dots"></span><span>3</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>2.3 Matriks Hak Akses Pengguna</span><span class="toc-dots"></span><span>4</span></div>
+
+  <div class="toc-item toc-chapter"><span>BAB III: PETUNJUK OPERASIONAL PENGGUNA (PEGAWAI / PUBLIK)</span><span>5</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.1 Mengakses Halaman Utama & Beralih Layanan</span><span class="toc-dots"></span><span>5</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.2 Membaca Indikator Status & Progress Bar Realtime</span><span class="toc-dots"></span><span>5</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.3 Rincian 8 Tahapan Alur Pencairan Anggaran</span><span class="toc-dots"></span><span>6</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.4 Memantau Papan Pengumuman & Estimasi Waktu</span><span class="toc-dots"></span><span>7</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.5 Melihat Riwayat dan Arsip Pencairan Lampau</span><span class="toc-dots"></span><span>7</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.6 Memberikan Rating Evaluasi Kepuasan Layanan</span><span class="toc-dots"></span><span>8</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.7 Layanan Bantuan Terintegrasi WhatsApp Bendahara</span><span class="toc-dots"></span><span>8</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>3.8 Pemasangan Aplikasi PWA di Perangkat Ponsel</span><span class="toc-dots"></span><span>9</span></div>
+
+  <div class="toc-item toc-chapter"><span>BAB IV: PETUNJUK OPERASIONAL ADMINISTRATOR (BENDAHARA)</span><span>10</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.1 Prosedur Login Administrator</span><span class="toc-dots"></span><span>10</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.2 Dashboard Kontrol Tukin dan Uang Makan</span><span class="toc-dots"></span><span>10</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.3 Tata Cara Memperbarui Tahapan (Maju / Mundur)</span><span class="toc-dots"></span><span>11</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.4 Mengubah Informasi Periode, Estimasi, dan Pengumuman</span><span class="toc-dots"></span><span>11</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.5 Penanganan Penolakan Berkas / Revisi Dokumen KPPN</span><span class="toc-dots"></span><span>12</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.6 Penyelesaian Pencairan (SP2D) & Arsip Otomatis</span><span class="toc-dots"></span><span>12</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.7 Pemantauan Indeks Kepuasan Pegawai</span><span class="toc-dots"></span><span>13</span></div>
+  <div class="toc-item" style="padding-left: 15px;"><span>4.8 Prosedur Reset Siklus untuk Periode Baru</span><span class="toc-dots"></span><span>13</span></div>
+
+  <div class="toc-item toc-chapter"><span>BAB V: STANDAR OPERASIONAL PROSEDUR (SOP) 8 TAHAPAN</span><span>14</span></div>
+  <div class="toc-item toc-chapter"><span>BAB VI: TROUBLESHOOTING & MANAJEMEN RISIKO</span><span>15</span></div>
+  <div class="toc-item toc-chapter"><span>BAB VII: PENUTUP</span><span>16</span></div>
+  <div class="toc-item toc-chapter"><span>LAMPIRAN: GLOSARIUM ISTILAH</span><span>17</span></div>
+
+  <!-- BAB I: PENDAHULUAN -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">BAB I: PENDAHULUAN</h1>
+
+  <h2 class="section-title">1.1 Latar Belakang</h2>
+  <p>
+    Tunjangan Kinerja (Tukin) dan Uang Makan merupakan komponen hak keuangan aparatur sipil negara yang sangat krusial dalam menunjang operasional, motivasi kerja, dan kesejahteraan pegawai pada Kejaksaan Negeri Soppeng. Dalam proses administrasi pencairannya, berkas pengajuan harus melalui tahapan birokrasi dan rekonsiliasi yang ketat dan berjenjang—dimulai dari rekapitulasi kehadiran pada presensi online, perhitungan nominal potongan, sinkronisasi data pada aplikasi Gaji Web, validasi anggaran pada aplikasi SAKTI Kementerian Keuangan, hingga penerbitan Surat Perintah Pencairan Dana (SP2D) oleh Kantor Pelayanan Perbendaharaan Negara (KPPN).
+  </p>
+  <p>
+    Sebelum adanya sistem otomasi informasi, pegawai seringkali tidak mengetahui posisi berkas pengajuan hak keuangan mereka, sehingga menimbulkan pertanyaan berulang kepada staf pengelola keuangan/Bendahara Pengeluaran. Kondisi tersebut membebani efisiensi waktu kerja staf keuangan. Oleh karena itu, diinisiasi pembangunan <strong>Sistem Informasi Monitoring Tukin & Uang Makan (SI MANTU)</strong> sebagai kanal transparansi yang dapat diakses oleh seluruh pegawai kapan saja dan di mana saja secara <em>realtime</em>.
+  </p>
+
+  <h2 class="section-title">1.2 Maksud dan Tujuan</h2>
+  <p>Penyusunan Petunjuk Operasional Program Aplikasi ini memiliki maksud dan tujuan sebagai berikut:</p>
+  <ul>
+    <li><strong>Sebagai Pedoman Standar Operasional</strong>: Memberikan acuan langkah kerja yang baku bagi Bendahara Pengeluaran dalam mengelola status tahapan pencairan secara akurat dan tepat waktu.</li>
+    <li><strong>Memberikan Panduan bagi Pegawai</strong>: Memudahkan seluruh pegawai Kejaksaan Negeri Soppeng dalam memahami cara mengakses, membaca indikator alur, dan memanfaatkan fitur layanan SIMANTU.</li>
+    <li><strong>Mewujudkan Transparansi & Akuntabilitas</strong>: Mendukung terwujudnya tata kelola keuangan yang terbuka dan akuntabel di lingkungan Kejaksaan Negeri Soppeng sejalan dengan Reformasi Birokrasi dan Pembangunan Zona Integritas (WBK/WBBM).</li>
+    <li><strong>Dokumentasi Penilaian Kinerja Pranata Komputer</strong>: Sebagai bukti fisik formal butir kegiatan penyusunan petunjuk operasional program aplikasi sistem informasi.</li>
+  </ul>
+
+  <h2 class="section-title">1.3 Ruang Lingkup Sistem</h2>
+  <p>Aplikasi SIMANTU mencakup ruang lingkup fungsionalitas berikut:</p>
+  <ol>
+    <li><strong>Modul Pelacakan Tunjangan Kinerja (Tukin)</strong>: Melacak 8 tahapan alur berkas pencairan Tukin bulanan beserta persentase progres, catatan khusus bendahara, dan estimasi waktu selesai.</li>
+    <li><strong>Modul Pelacakan Uang Makan</strong>: Melacak 8 tahapan alur berkas pencairan Uang Makan bulanan.</li>
+    <li><strong>Modul Dashboard Administrator</strong>: Panel kontrol autentikasi aman bagi Bendahara Pengeluaran untuk memperbarui tahap berkas, menerbitkan pengumuman, mengubah status penolakan SPM, dan mereset siklus bulanan.</li>
+    <li><strong>Modul Arsip Riwayat Pencairan</strong>: Penyimpanan basis data periode pencairan yang telah sukses terbit SP2D.</li>
+    <li><strong>Modul Umpan Balik & Evaluasi</strong>: Fitur penilaian bintang 1–5 bagi pegawai untuk mengevaluasi kecepatan dan transparansi layanan pencairan.</li>
+    <li><strong>Modul Pusat Bantuan</strong>: Integrasi komunikasi cepat ke WhatsApp resmi Bendahara Pengeluaran.</li>
+  </ol>
+
+  <h2 class="section-title">1.4 Profil Sistem Informasi SIMANTU</h2>
+  <table style="margin-top: 10px;">
+    <tr>
+      <th style="width: 30%;">Atribut Sistem</th>
+      <th>Keterangan Teknis</th>
+    </tr>
+    <tr>
+      <td><strong>Nama Resmi</strong></td>
+      <td>SIMANTU (Sistem Monitoring Tunjangan Kinerja & Uang Makan)</td>
+    </tr>
+    <tr>
+      <td><strong>Satuan Kerja Pemilik</strong></td>
+      <td>Kejaksaan Negeri Soppeng</td>
+    </tr>
+    <tr>
+      <td><strong>Unit Pengelola</strong></td>
+      <td>Subbagian Pembinaan (Urusan Keuangan & Kepegawaian)</td>
+    </tr>
+    <tr>
+      <td><strong>Framework Frontend</strong></td>
+      <td>Next.js 16.2.3 (React 19, Turbopack, Tailwind CSS 4)</td>
+    </tr>
+    <tr>
+      <td><strong>Basis Data & Realtime</strong></td>
+      <td>Supabase PostgreSQL dengan WebSocket Realtime Channels</td>
+    </tr>
+    <tr>
+      <td><strong>Metode Aksesibilitas</strong></td>
+      <td>Web Responsive & PWA (Installable di Android, iOS, Windows, macOS)</td>
+    </tr>
+  </table>
+
+  <!-- BAB II: KEBUTUHAN SISTEM -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">BAB II: SPESIFIKASI DAN KEBUTUHAN SISTEM</h1>
+
+  <h2 class="section-title">2.1 Kebutuhan Perangkat Keras (Hardware)</h2>
+  <p>Untuk menjalankan dan mengakses aplikasi SIMANTU secara optimal, spesifikasi perangkat keras minimum yang disarankan adalah sebagai berikut:</p>
+
+  <table>
+    <tr>
+      <th>Kategori</th>
+      <th>Perangkat Pengguna (Pegawai)</th>
+      <th>Perangkat Administrator (Bendahara)</th>
+    </tr>
+    <tr>
+      <td><strong>Jenis Perangkat</strong></td>
+      <td>Smartphone (Android/iOS) atau Laptop/PC</td>
+      <td>Laptop atau Komputer PC Desktop Kantor</td>
+    </tr>
+    <tr>
+      <td><strong>Processor</strong></td>
+      <td>Quad-Core 1.5 GHz atau lebih tinggi</td>
+      <td>Intel Core i3 / AMD Ryzen 3 atau setara</td>
+    </tr>
+    <tr>
+      <td><strong>Memori (RAM)</strong></td>
+      <td>2 GB RAM atau lebih tinggi</td>
+      <td>4 GB RAM (Disarankan 8 GB)</td>
+    </tr>
+    <tr>
+      <td><strong>Ruang Penyimpanan</strong></td>
+      <td>Tersedia ruang 50 MB untuk cache PWA</td>
+      <td>Tersedia ruang 200 MB</td>
+    </tr>
+    <tr>
+      <td><strong>Konektivitas</strong></td>
+      <td>Koneksi Internet stabil (4G/5G atau Wi-Fi)</td>
+      <td>Koneksi Internet Kantor / LAN berkecepatan stabil</td>
+    </tr>
+  </table>
+
+  <h2 class="section-title">2.2 Kebutuhan Perangkat Lunak (Software)</h2>
+  <p>Aplikasi SIMANTU bersifat <em>cross-platform</em> berbasis web browser modern:</p>
+  <ul>
+    <li><strong>Sistem Operasi Kompatibel</strong>: Android (versi 9.0 ke atas), iOS (versi 14.0 ke atas), Windows 10/11, macOS, dan Linux.</li>
+    <li><strong>Peramban Web (Browser)</strong>:
+      <ul>
+        <li>Google Chrome versi 100+ (Sangat Direkomendasikan)</li>
+        <li>Apple Safari versi 14+ (Mendukung WebKit PWA)</li>
+        <li>Microsoft Edge versi 100+</li>
+        <li>Mozilla Firefox versi 100+</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2 class="section-title">2.3 Matriks Hak Akses Pengguna (Role-Based Access)</h2>
+  <p>Hak akses pengguna pada SIMANTU dibagi menjadi 2 (dua) tingkat kewenangan:</p>
+
+  <table>
+    <tr>
+      <th style="width: 22%;">Peran Pengguna</th>
+      <th style="width: 33%;">Deskripsi & Cakupan</th>
+      <th style="width: 45%;">Kewenangan Akses Fitur</th>
+    </tr>
+    <tr>
+      <td><strong>Pengguna Publik<br>(Pegawai Kejaksaan)</strong></td>
+      <td>Seluruh pegawai ASN / PPNPN Kejaksaan Negeri Soppeng</td>
+      <td>
+        <ul>
+          <li>Melihat status progres pencairan Tukin & Uang Makan.</li>
+          <li>Membaca catatan pengumuman dan estimasi waktu.</li>
+          <li>Melihat riwayat arsip pencairan bulan lalu.</li>
+          <li>Memberikan rating kepuasan (bintang 1–5).</li>
+          <li>Menghubungi bendahara via WhatsApp terintegrasi.</li>
+          <li>Menginstal aplikasi ke layar utama (PWA).</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Administrator<br>(Bendahara Pengeluaran)</strong></td>
+      <td>Staf pengelola keuangan yang memiliki kredensial akun resmi</td>
+      <td>
+        <ul>
+          <li>Login aman ke modul manajemen (<code>/admin/login</code>).</li>
+          <li>Memajukan/memundurkan tahapan alur berkas (Tahap 1–8).</li>
+          <li>Memperbarui teks pengumuman dan target estimasi.</li>
+          <li>Menandai status penolakan berkas (Revisi KPPN).</li>
+          <li>Menyelesaikan pencairan & mengarsipkan data otomatis.</li>
+          <li>Melihat rekapitulasi rating kepuasan pegawai.</li>
+          <li>Mereset siklus untuk menyambut periode baru.</li>
+        </ul>
+      </td>
+    </tr>
+  </table>
+
+  <!-- BAB III: PETUNJUK PENGGUNA PUBLIK -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">BAB III: PETUNJUK OPERASIONAL PENGGUNA (PEGAWAI)</h1>
+
+  <h2 class="section-title">3.1 Mengakses Halaman Utama & Beralih Layanan</h2>
+  <p>
+    Pegawai dapat mengakses aplikasi SIMANTU melalui peramban pada ponsel pintar atau komputer dengan mengunjungi alamat URL resmi yang telah didistribusikan. Pada bagian atas layar, terdapat tombol pengalih layanan:
+  </p>
+  <ul>
+    <li><strong>Tunjangan Kinerja</strong>: Klik tombol <em>"Tunjangan Kinerja"</em> (ikon dompet) untuk memantau berkas Tukin. Halaman ini menggunakan tema identitas warna Hijau Zamrud (Emerald).</li>
+    <li><strong>Uang Makan</strong>: Klik tombol <em>"Uang Makan"</em> (ikon sendok garpu) untuk memantau berkas Uang Makan. Halaman ini menggunakan tema identitas warna Kuning Emas (Amber).</li>
+  </ul>
+
+  <h2 class="section-title">3.2 Membaca Indikator Status & Progress Bar Realtime</h2>
+  <p>
+    Pada bagian tengah halaman utama, ditampilkan <strong>Kartu Status Utama</strong> yang memberikan informasi ringkas namun padat:
+  </p>
+  <ul>
+    <li><strong>Badge Posisi Saat Ini</strong>: Menandakan nama tahapan berkas yang saat ini sedang aktif dikerjakan oleh tim keuangan.</li>
+    <li><strong>Indikator Estimasi Waktu</strong>: Waktu perkiraan berkas akan selesai diproses pada tahapan tersebut (misal: <em>"1-2 Hari"</em>).</li>
+    <li><strong>Ikon Representasi & Nama Tahap</strong>: Memuat ilustrasi visual dan nama resmi tahapan bersangkutan.</li>
+    <li><strong>Progress Bar Penyelesaian</strong>: Menampilkan persentase keberjalanan berkas dari 0% hingga 100% lengkap dengan penanda angka milestone 1 sampai 8 di bawahnya.</li>
+    <li><strong>Indikator Koneksi Live</strong>: Badge di navbar kanan atas yang bertuliskan <em>"Live Realtime"</em> berwarna hijau berkedip, menandakan browser Anda terhubung langsung ke database tanpa perlu refresh halaman manual.</li>
+  </ul>
+
+  <h2 class="section-title">3.3 Rincian 8 Tahapan Alur Pencairan Anggaran</h2>
+  <p>
+    Aplikasi membagi siklus pencairan anggaran ke dalam 8 tahapan standar operasional yang tertera pada kartu grid alur:
+  </p>
+
+  <div class="step-list">
+    <div class="step-card">
+      <div><span class="step-card-num">1</span><span class="step-card-title">Rekapitulasi Absensi</span></div>
+      <div class="step-card-desc">Penarikan data kehadiran, izin, dan potongan pegawai dari sistem presensi online.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">2</span><span class="step-card-title">Pengesahan Rekap</span></div>
+      <div class="step-card-desc">Verifikasi dan penandatanganan rekap absensi oleh pimpinan secara berjenjang.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">3</span><span class="step-card-title">Hitung Tukin / Uang Makan</span></div>
+      <div class="step-card-desc">Perhitungan nominal bersih hak keuangan per pegawai oleh aplikasi sistem.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">4</span><span class="step-card-title">Gaji Web KPPN</span></div>
+      <div class="step-card-desc">Proses upload dan sinkronisasi data tagihan ke portal Gaji Web Kementerian Keuangan.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">5</span><span class="step-card-title">SAKTI KPPN</span></div>
+      <div class="step-card-desc">Validasi ketersediaan pagu anggaran belanja pegawai di aplikasi SAKTI.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">6</span><span class="step-card-title">Pengajuan SPM</span></div>
+      <div class="step-card-desc">Penerbitan Surat Perintah Membayar (SPM) oleh PPSPM kepada KPPN setempat.</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">7</span><span class="step-card-title">Verifikasi KPPN</span></div>
+      <div class="step-card-desc">Tahap pengujian dokumen oleh KPPN (status penentu apakah disetujui atau revisi).</div>
+    </div>
+    <div class="step-card">
+      <div><span class="step-card-num">8</span><span class="step-card-title">SP2D Terbit (Cair!)</span></div>
+      <div class="step-card-desc">Surat Perintah Pencairan Dana diterbitkan, dana masuk ke rekening masing-masing pegawai.</div>
+    </div>
+  </div>
+
+  <!-- BAB III LANJUTAN -->
+  <div class="page-break"></div>
+  <h2 class="section-title">3.4 Memantau Papan Pengumuman & Estimasi Waktu</h2>
+  <p>
+    Di samping kanan kartu status utama, terdapat dua kartu widget penting:
+  </p>
+  <ul>
+    <li><strong>Papan Pengumuman</strong>: Apabila terdapat catatan khusus dari bendahara (misalnya: <em>"Mohon pegawai yang belum setor absensi manual segera mengumpulkan"</em>), kotak ini akan menyala dengan warna oranye/kuning dan ikon lonceng animasi. Jika tidak ada catatan, kotak akan berstatus <em>"Semua Berjalan Normal"</em>.</li>
+    <li><strong>Terakhir Diperbarui</strong>: Menampilkan jam dan tanggal presisi kapan bendahara melakukan pembaharuan data terakhir kali pada sistem.</li>
+  </ul>
+
+  <h2 class="section-title">3.5 Melihat Riwayat dan Arsip Pencairan Lampau</h2>
+  <p>
+    Pegawai dapat memeriksa arsip pencairan periode-periode terdahulu melalui tombol <strong>"Riwayat"</strong> (ikon riwayat) yang berada di samping tombol switcher layanan.
+  </p>
+  <div class="callout callout-info">
+    <strong>Petunjuk Operasional Arsip:</strong>
+    <ol style="margin-top: 4px;">
+      <li>Klik tombol <strong>"Riwayat"</strong> di bagian atas halaman.</li>
+      <li>Jendela modal akan terbuka dan memuat daftar periode pencairan yang telah sukses terbit SP2D.</li>
+      <li>Setiap item mencantumkan nama periode bulan dan tanggal resmi dana dicairkan.</li>
+      <li>Klik tombol silang (X) atau klik di luar area jendela untuk menutup tampilan arsip.</li>
+    </ol>
+  </div>
+
+  <h2 class="section-title">3.6 Memberikan Rating Evaluasi Kepuasan Layanan</h2>
+  <p>
+    Ketika berkas telah mencapai <strong>Tahap 8 (SP2D Terbit)</strong>, sistem secara otomatis akan menampilkan banner perayaan hijau lengkap dengan hujan konfeti dan formulir interaktif <strong>"Beri Penilaian Layanan"</strong>:
+  </p>
+  <ul>
+    <li>Arahkan kursor atau sentuh bintang 1 sampai 5. Label teks akan berubah secara dinamis:
+      <ul>
+        <li>1 Bintang : <em>Sangat Lambat</em></li>
+        <li>2 Bintang : <em>Kurang Memuaskan</em></li>
+        <li>3 Bintang : <em>Cukup Baik</em></li>
+        <li>4 Bintang : <em>Cepat & Tepat</em></li>
+        <li>5 Bintang : <em>Sangat Cepat & Transparan!</em></li>
+      </ul>
+    </li>
+    <li>Klik salah satu bintang untuk mengirimkan ulasan secara anonim. Nilai Anda langsung tersimpan di database dan menjadi masukan evaluasi indeks kepuasan pimpinan.</li>
+  </ul>
+
+  <h2 class="section-title">3.7 Layanan Bantuan Terintegrasi WhatsApp Bendahara</h2>
+  <p>
+    Jika pegawai mengalami kendala atau memiliki pertanyaan khusus yang belum terjawab pada papan pengumuman:
+  </p>
+  <ol>
+    <li>Klik tombol mengambang <strong>"Bantuan"</strong> (ikon tanda tanya) di pojok kanan bawah layar.</li>
+    <li>Jendela pop-up pusat bantuan akan terbuka.</li>
+    <li>Klik tombol <strong>"Chat Tim Bendahara"</strong>. Sistem akan langsung membuka aplikasi WhatsApp dan menyusun draf pesan otomatis terkait konfirmasi hak keuangan.</li>
+  </ol>
+
+  <h2 class="section-title">3.8 Pemasangan Aplikasi PWA di Perangkat Ponsel</h2>
+  <p>
+    SIMANTU mendukung standar <em>Progressive Web App</em> (PWA), sehingga pegawai tidak perlu mendownload file APK besar di Play Store. Cukup lakukan pemasangan langsung dari web browser:
+  </p>
+  <ul>
+    <li><strong>Pada Android (Chrome)</strong>: Buka link SIMANTU, klik tombol titik tiga di pojok kanan atas browser, lalu pilih <strong>"Tambahkan ke Layar Utama" (Add to Home screen)</strong> atau <strong>"Instal Aplikasi"</strong>.</li>
+    <li><strong>Pada iPhone / iPad (Safari)</strong>: Buka link SIMANTU di Safari, klik ikon <strong>Share</strong> (kotak dengan panah ke atas di bilah bawah), scroll ke bawah dan pilih <strong>"Add to Home Screen" (Tambah ke Layar Utama)</strong>.</li>
+  </ul>
+
+  <!-- BAB IV: PETUNJUK ADMINISTRATOR -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">BAB IV: PETUNJUK OPERASIONAL ADMINISTRATOR (BENDAHARA)</h1>
+
+  <h2 class="section-title">4.1 Prosedur Login Administrator</h2>
+  <p>
+    Panel administrasi berada pada rute khusus yang terlindungi. Hanya Bendahara Pengeluaran dan operator resmi yang memiliki akses masuk:
+  </p>
+  <ol>
+    <li>Buka alamat peramban: <code>https://[domain-aplikasi]/admin/login</code></li>
+    <li>Masukkan <strong>Email Administrator</strong> dan <strong>Password Rahasia</strong> yang telah didaftarkan.</li>
+    <li>Klik tombol <strong>"Masuk ke Dashboard"</strong>. Jika kredensial valid, sistem akan mengarahkan administrator ke halaman kontrol utama.</li>
+  </ol>
+  <div class="callout callout-warning">
+    <strong>Perhatian Keamanan:</strong> Jangan membagikan kata sandi administrator kepada pihak yang tidak berkepentingan. Pastikan selalu menekan tombol <strong>"Keluar" (Logout)</strong> setelah selesai melakukan pembaruan data.
+  </div>
+
+  <h2 class="section-title">4.2 Dashboard Kontrol Tukin dan Uang Makan</h2>
+  <p>
+    Administrator memiliki dua konsol kontrol terpisah yang dapat diakses melalui menu navigasi samping:
+  </p>
+  <ul>
+    <li><strong>Dashboard Tukin</strong> (<code>/admin</code>): Untuk mengelola tahapan dan status Tunjangan Kinerja.</li>
+    <li><strong>Dashboard Uang Makan</strong> (<code>/admin/uang-makan</code>): Untuk mengelola tahapan dan status Uang Makan.</li>
+  </ul>
+
+  <h2 class="section-title">4.3 Tata Cara Memperbarui Tahapan (Maju / Mundur)</h2>
+  <p>
+    Pada panel tengah dashboard admin, terdapat pengendali tahapan interaktif:
+  </p>
+  <ul>
+    <li><strong>Memajukan Tahap (Advance)</strong>: Klik tombol hijau <strong>"Lanjut ke Tahap Berikutnya"</strong> (ikon panah kanan). Tahapan akan bertambah 1 angka, persentase naik, dan pembaruan waktu langsung terkirim ke seluruh layar HP pegawai secara realtime.</li>
+    <li><strong>Memundurkan Tahap (Rollback)</strong>: Apabila terjadi kesalahan input atau terdapat verifikasi yang perlu diulang, klik tombol abu-abu <strong>"Kembali ke Tahap Sebelumnya"</strong> (ikon panah kiri).</li>
+  </ul>
+
+  <h2 class="section-title">4.4 Mengubah Informasi Periode, Estimasi, dan Pengumuman</h2>
+  <p>
+    Di sisi kanan dashboard, terdapat formulir <strong>"Pengaturan & Informasi"</strong>:
+  </p>
+  <ul>
+    <li><strong>Input Periode</strong>: Ketikkan nama bulan dan tahun anggaran (Contoh: <em>"September 2026"</em>).</li>
+    <li><strong>Input Estimasi Waktu</strong>: Tuliskan perkiraan waktu penyelesaian (Contoh: <em>"1 Hari Kerja"</em> atau <em>"25 September 2026"</em>).</li>
+    <li><strong>Input Catatan Pengumuman</strong>: Masukkan instruksi penting bagi pegawai (Contoh: <em>"SPM telah diajukan ke KPPN, menunggu penerbitan SP2D siang ini"</em>).</li>
+    <li>Setelah mengubah data, klik tombol biru <strong>"Simpan Pembaruan"</strong>.</li>
+  </ul>
+
+  <h2 class="section-title">4.5 Penanganan Penolakan Berkas / Revisi Dokumen KPPN</h2>
+  <p>
+    Apabila dokumen SPM dikembalikan oleh KPPN untuk revisi:
+  </p>
+  <ol>
+    <li>Klik tombol merah <strong>"Tandai Berkas Ditolak / Perbaikan"</strong>.</li>
+    <li>Kotak konfirmasi akan muncul. Klik <strong>"Ya, Tandai Revisi"</strong>.</li>
+    <li>Secara otomatis pada halaman publik seluruh pegawai, banner peringatan merah akan muncul memberitahukan bahwa berkas sedang dalam proses revisi intensif oleh tim keuangan, sehingga pegawai mendapat kepastian informasi yang akurat.</li>
+    <li>Setelah berkas diperbaiki dan diajukan ulang, klik tombol <strong>"Pulihkan Status Normal"</strong>.</li>
+  </ol>
+
+  <!-- BAB IV LANJUTAN & BAB V -->
+  <div class="page-break"></div>
+  <h2 class="section-title">4.6 Penyelesaian Pencairan (SP2D) & Arsip Otomatis</h2>
+  <p>
+    Ketika KPPN telah menerbitkan SP2D dan dana resmi masuk ke kas negara/rekening:
+  </p>
+  <ol>
+    <li>Majukan tahapan hingga mencapai <strong>Tahap 8 (SP2D Terbit)</strong>.</li>
+    <li>Sistem akan menampilkan konfirmasi pencairan selesai.</li>
+    <li>Data periode dan tanggal cair secara otomatis dicatat ke dalam tabel <code>arsip_pencairan</code>, sehingga tersimpan permanen sebagai jejak riwayat.</li>
+    <li>Halaman publik pegawai akan menampilkan selebrasi pencairan dan membuka formulir rating evaluasi.</li>
+  </ol>
+
+  <h2 class="section-title">4.7 Pemantauan Indeks Kepuasan Pegawai</h2>
+  <p>
+    Pada kartu ringkasan dashboard administrator, terdapat indikator <strong>"Rata-rata Rating Kepuasan"</strong> yang menghitung secara otomatis rerata penilaian bintang dari seluruh pegawai pada periode berjalan. Angka ini dapat dijadikan tolok ukur kinerja pelayanan keuangan internal.
+  </p>
+
+  <h2 class="section-title">4.8 Prosedur Reset Siklus untuk Periode Baru</h2>
+  <p>
+    Pada awal bulan berikutnya, ketika memulai siklus baru:
+  </p>
+  <ol>
+    <li>Klik tombol <strong>"Reset Periode Baru"</strong> pada dashboard admin.</li>
+    <li>Konfirmasi tindakan reset. Sistem akan mengembalikan posisi ke <strong>Tahap 1 (Rekapitulasi Absensi)</strong>, membersihkan catatan pengumuman lama, dan memperbarui tanggal periode kerja baru. Data periode lama tetap aman tersimpan di menu riwayat arsip.</li>
+  </ol>
+
+  <h1 class="chapter-title" style="margin-top: 30px;">BAB V: STANDAR OPERASIONAL PROSEDUR (SOP) 8 TAHAPAN</h1>
+  <p>Tabel matriks operasional pembagian tugas dan output dokumen dalam proses pencairan hak keuangan:</p>
+
+  <table>
+    <tr>
+      <th style="width: 5%;">No</th>
+      <th style="width: 20%;">Tahapan</th>
+      <th style="width: 35%;">Aktivitas Kerja</th>
+      <th style="width: 22%;">Pelaksana / PIC</th>
+      <th style="width: 18%;">Output Dokumen</th>
+    </tr>
+    <tr>
+      <td style="text-align: center;">1</td>
+      <td><strong>Rekapitulasi Absensi</strong></td>
+      <td>Mengunduh dan merekap data presensi sidik jari / online pegawai selama 1 bulan kerja.</td>
+      <td>Staf Urusan Kepegawaian</td>
+      <td>Daftar Rekap Absensi & Potongan</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">2</td>
+      <td><strong>Pengesahan Rekap</strong></td>
+      <td>Pemeriksaan hierarki dan penandatanganan pengesahan daftar hadir oleh pimpinan.</td>
+      <td>Pimpinan Satker</td>
+      <td>Rekap Absensi Sah Ditandatangani</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">3</td>
+      <td><strong>Hitung Tukin / Uang Makan</strong></td>
+      <td>Memasukkan variabel potongan ke form perhitungan untuk menghasilkan nominal hak bersih.</td>
+      <td>Bendahara Pengeluaran / Staf Keuangan</td>
+      <td>Daftar Nominatif Pembayaran</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">4</td>
+      <td><strong>Gaji Web KPPN</strong></td>
+      <td>Mengunggah data nominal pegawai ke portal aplikasi Gaji Web KPPN.</td>
+      <td>Operator Keuangan</td>
+      <td>ADK Gaji Web Terkirim</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">5</td>
+      <td><strong>SAKTI KPPN</strong></td>
+      <td>Membuat resume tagihan dan validasi ketersediaan pagu belanja pegawai di modul SAKTI.</td>
+      <td>Operator SAKTI</td>
+      <td>SPP (Surat Permintaan Pembayaran)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">6</td>
+      <td><strong>Pengajuan SPM</strong></td>
+      <td>Pejabat Penandatangan SPM menyetujui dan menerbitkan Surat Perintah Membayar.</td>
+      <td>PPSPM Kejaksaan Negeri Soppeng</td>
+      <td>SPM Elektronik Ber-OTP</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">7</td>
+      <td><strong>Verifikasi KPPN</strong></td>
+      <td>KPPN menguji keabsahan SPM dan ketersediaan kas negara.</td>
+      <td>Front Office / Seksi Pencairan KPPN</td>
+      <td>Tanda Terima / Catatan Koreksi</td>
+    </tr>
+    <tr>
+      <td style="text-align: center;">8</td>
+      <td><strong>SP2D Terbit</strong></td>
+      <td>KPPN menerbitkan SP2D, dana ditransfer bank penyalur ke rekening masing-masing pegawai.</td>
+      <td>KPPN & Bank Penyalur</td>
+      <td>SP2D Sah & Mutasi Bank Pegawai</td>
+    </tr>
+  </table>
+
+  <!-- BAB VI & BAB VII -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">BAB VI: MANAJEMEN RISIKO & TROUBLESHOOTING</h1>
+
+  <h2 class="section-title">6.1 Panduan Penanganan Kendala (Troubleshooting)</h2>
+  <table>
+    <tr>
+      <th style="width: 25%;">Gejala Kendala</th>
+      <th style="width: 35%;">Penyebab Potensial</th>
+      <th style="width: 40%;">Langkah Solusi Rekomendasi</th>
+    </tr>
+    <tr>
+      <td><strong>Layar Menampilkan "Koneksi Terputus"</strong></td>
+      <td>Perangkat ponsel kehilangan koneksi internet atau server database sedang dalam pemeliharaan.</td>
+      <td>Periksa kembali koneksi paket data atau Wi-Fi perangkat, lalu tekan tombol <em>"Coba Muat Ulang"</em>.</td>
+    </tr>
+    <tr>
+      <td><strong>Status Tidak Berubah Padahal Bendahara Sudah Update</strong></td>
+      <td>WebSocket realtime browser terputus akibat ponsel masuk ke mode hemat baterai (sleep mode).</td>
+      <td>Lakukan penyegaran browser (swipe down / reload) satu kali untuk memicu handshake WebSocket ulang.</td>
+    </tr>
+    <tr>
+      <td><strong>Gagal Login Administrator</strong></td>
+      <td>Kombinasi email atau password salah, atau Caps Lock sedang aktif.</td>
+      <td>Pastikan huruf besar-kecil password telah sesuai. Hubungi Administrator Pengembang jika perlu reset kredensial.</td>
+    </tr>
+    <tr>
+      <td><strong>Aplikasi Tidak Muncul Tombol Install PWA</strong></td>
+      <td>Browser yang digunakan tidak mendukung standar PWA (misal browser bawaan messenger).</td>
+      <td>Gunakan peramban Google Chrome standar (Android) atau Safari asli (iOS).</td>
+    </tr>
+  </table>
+
+  <h2 class="section-title">6.2 Pemeliharaan Sistem & Backup Data</h2>
+  <p>
+    Basis data SIMANTU dikelola di cloud server Supabase dengan enkripsi tingkat perbankan (SSL/TLS). Pencadangan basis data (database backup) dilakukan secara berkala dan otomatis setiap pekan oleh sistem. Seluruh interaksi administrator dicatat dalam log riwayat aktivitas guna menjamin auditabilitas tata kelola teknologi informasi.
+  </p>
+
+  <h1 class="chapter-title" style="margin-top: 30px;">BAB VII: PENUTUP</h1>
+  <p>
+    Buku <strong>Petunjuk Operasional Program Aplikasi Sistem Informasi SIMANTU</strong> ini diharapkan dapat menjadi panduan baku yang efektif dan berkelanjutan dalam pemanfaatan teknologi informasi di Kejaksaan Negeri Soppeng. Melalui sistem ini, transparansi pengelolaan anggaran keuangan pegawai dapat terwujud secara nyata, meminimalisir miskomunikasi, dan meningkatkan kepuasan kerja seluruh aparatur.
+  </p>
+  <p>
+    Evaluasi dan pemutakhiran terhadap petunjuk operasional ini akan dilakukan secara berkesinambungan seiring dengan adanya pembaruan regulasi keuangan negara maupun perkembangan fitur sistem di masa mendatang.
+  </p>
+
+  <!-- LAMPIRAN -->
+  <div class="page-break"></div>
+  <h1 class="chapter-title">LAMPIRAN: GLOSARIUM ISTILAH</h1>
+
+  <table>
+    <tr>
+      <th style="width: 22%;">Istilah / Singkatan</th>
+      <th>Keterangan dan Definisi</th>
+    </tr>
+    <tr>
+      <td><strong>SIMANTU</strong></td>
+      <td>Sistem Informasi Monitoring Tunjangan Kinerja dan Uang Makan Kejaksaan Negeri Soppeng.</td>
+    </tr>
+    <tr>
+      <td><strong>Tukin</strong></td>
+      <td>Tunjangan Kinerja pegawai yang dibayarkan berdasarkan capaian kinerja dan kedisiplinan absensi.</td>
+    </tr>
+    <tr>
+      <td><strong>SPM</strong></td>
+      <td>Surat Perintah Membayar, dokumen resmi yang diterbitkan PPSPM satker kepada KPPN untuk mencairkan dana.</td>
+    </tr>
+    <tr>
+      <td><strong>SP2D</strong></td>
+      <td>Surat Perintah Pencairan Dana, dokumen pengeluaran kas negara resmi yang diterbitkan KPPN selaku Kuasa BUN.</td>
+    </tr>
+    <tr>
+      <td><strong>SAKTI</strong></td>
+      <td>Sistem Aplikasi Keuangan Tingkat Instansi, aplikasi terintegrasi perbendaharaan milik Kementerian Keuangan RI.</td>
+    </tr>
+    <tr>
+      <td><strong>Gaji Web</strong></td>
+      <td>Aplikasi terpusat berbasis web untuk pengelolaan perhitungan dan database belanja pegawai Kemenkeu.</td>
+    </tr>
+    <tr>
+      <td><strong>KPPN</strong></td>
+      <td>Kantor Pelayanan Perbendaharaan Negara, instansi vertikal Ditjen Perbendaharaan Kemenkeu selaku penyalur dana APBN.</td>
+    </tr>
+    <tr>
+      <td><strong>PWA</strong></td>
+      <td>Progressive Web App, teknologi peramban web modern yang memungkinkan aplikasi web diinstal layaknya aplikasi native pada ponsel.</td>
+    </tr>
+    <tr>
+      <td><strong>Realtime Channel</strong></td>
+      <td>Teknologi komunikasi dua arah via WebSocket yang mengirimkan perubahan data server secara instan ke layar pengguna tanpa reload.</td>
+    </tr>
+  </table>
+
+  <div style="margin-top: 45px; text-align: center; font-size: 8.5pt; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+    Dokumen Resmi Kejaksaan Negeri Soppeng &copy; TA 2026. Hak Cipta Dilindungi.
+  </div>
+
+</body>
+</html>
