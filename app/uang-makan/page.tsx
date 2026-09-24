@@ -236,8 +236,8 @@ export default function UangMakanPublicPage() {
             </button>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] font-black text-slate-900 tracking-tight leading-[1.1] mb-6">Pencairan Uang Makan, <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">Kini Lebih Transparan.</span></h1>
-          <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-xl text-center md:text-left">Dapatkan pembaruan langsung dari tim pengelola keuangan. Lacak status berkas Anda dengan mudah dan tenang.</p>
+          <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] font-black text-slate-900 tracking-tight leading-[1.1] mb-6 text-balance">Pencairan Uang Makan, <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">Kini Lebih Transparan.</span></h1>
+          <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-xl text-center md:text-left text-pretty">Dapatkan pembaruan langsung dari tim pengelola keuangan. Lacak status berkas Anda dengan mudah dan tenang.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
@@ -250,10 +250,10 @@ export default function UangMakanPublicPage() {
               </div>
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left mb-6 sm:mb-0">
                 <div key={safeStep} className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/60 rounded-[2rem] flex items-center justify-center text-5xl sm:text-6xl shrink-0 shadow-inner animate-float">{currentStepData.icon}</div>
-                <div className="pt-2"><p className="text-xs text-slate-400 font-black uppercase tracking-widest mb-2 flex items-center justify-center sm:justify-start gap-1.5">Tahap {safeStep} <ChevronRight size={14}/> 8</p><h2 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight mb-3">{currentStepData.title}</h2><p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-md font-medium">{currentStepData.desc}</p></div>
+                <div className="pt-2"><p className="text-xs text-slate-400 font-black uppercase tracking-widest mb-2 flex items-center justify-center sm:justify-start gap-1.5">Tahap <span className="tabular-nums">{safeStep}</span> <ChevronRight size={14}/> <span className="tabular-nums">8</span></p><h2 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight mb-3 text-balance">{currentStepData.title}</h2><p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-md font-medium text-pretty">{currentStepData.desc}</p></div>
               </div>
               <div className="mt-8 sm:mt-14 bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                <div className="flex justify-between items-end mb-3"><span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Penyelesaian</span><span className="text-2xl font-black text-amber-500">{progressPct}%</span></div>
+                <div className="flex justify-between items-end mb-3"><span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Penyelesaian</span><span className="text-2xl font-black text-amber-500 tabular-nums">{progressPct}%</span></div>
                 <div className="h-4 w-full bg-slate-200/60 rounded-full overflow-hidden p-0.5"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-[1500ms] ease-out relative" style={{ width: `${progressPct}%` }}><div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div></div></div>
               </div>
             </div>
@@ -261,11 +261,11 @@ export default function UangMakanPublicPage() {
 
           <div className="flex flex-col gap-6">
             {data?.catatan && data.catatan !== "-" && data.catatan.trim() !== "" ? (
-              <div className="bg-orange-50 border border-orange-100 rounded-[2rem] p-8 flex-1 flex flex-col justify-center relative overflow-hidden"><div className="bg-white/60 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center text-orange-500 mb-4 shadow-sm relative z-10"><BellRing size={20} className="animate-wiggle" /></div><p className="text-xs font-bold uppercase tracking-wider text-orange-700/60 mb-2 relative z-10">Papan Pengumuman</p><p className="font-bold text-orange-900 text-[15px] leading-relaxed relative z-10">{data.catatan}</p></div>
+              <div className="bg-orange-50 border border-orange-100 rounded-[2rem] p-8 flex-1 flex flex-col justify-center relative overflow-hidden"><div className="bg-white/60 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center text-orange-500 mb-4 shadow-sm relative z-10"><BellRing size={20} className="animate-wiggle" /></div><p className="text-xs font-bold uppercase tracking-wider text-orange-700/60 mb-2 relative z-10">Papan Pengumuman</p><p className="font-bold text-orange-900 text-[15px] leading-relaxed relative z-10 text-pretty">{data.catatan}</p></div>
             ) : (
               <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex-1 flex flex-col justify-center"><div className="bg-amber-50 w-12 h-12 rounded-2xl flex items-center justify-center text-amber-500 mb-4"><CheckCheck size={20} /></div><p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Status Sistem</p><p className="font-bold text-slate-800 text-lg">Semua Normal</p></div>
             )}
-            <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex-1 flex flex-col justify-center"><p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Terakhir Diperbarui</p><div className="text-3xl font-black text-slate-800 tracking-tight mb-2">{data?.updated_at ? new Date(data.updated_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "—"}</div><p className="text-sm font-medium text-slate-500 flex items-center gap-2"><Calendar size={14} className="text-slate-400" />{data?.updated_at ? new Date(data.updated_at).toLocaleDateString("id-ID", { dateStyle: "long" }) : "—"}</p></div>
+            <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex-1 flex flex-col justify-center"><p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Terakhir Diperbarui</p><div className="text-3xl font-black text-slate-800 tracking-tight mb-2 tabular-nums">{data?.updated_at ? new Date(data.updated_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "—"}</div><p className="text-sm font-medium text-slate-500 flex items-center gap-2"><Calendar size={14} className="text-slate-400" />{data?.updated_at ? new Date(data.updated_at).toLocaleDateString("id-ID", { dateStyle: "long" }) : "—"}</p></div>
           </div>
         </div>
 
