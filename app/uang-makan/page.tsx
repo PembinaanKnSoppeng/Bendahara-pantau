@@ -6,7 +6,8 @@ import Link from "next/link";
 import {
   Check, X, Calendar, BellRing, CheckCheck,
   WifiOff, Clock, Sparkles, HelpCircle, LayoutDashboard,
-  RefreshCcw, HeartPulse, ChevronRight, Wallet, Utensils, Star, History
+  RefreshCcw, ChevronRight, Wallet, Utensils, Star, History,
+  ArrowUpRight, ShieldCheck
 } from "lucide-react";
 import Image from "next/image";
 
@@ -36,6 +37,15 @@ const STEPS = [
   { id: 6, title: "Pengajuan SPM", desc: "Penerbitan Surat Perintah Membayar", icon: "📄", eta: "1-2 Hari" },
   { id: 7, title: "Verifikasi KPPN", desc: "Tahap penentu: Approve atau Reject", icon: "🏛️", eta: "1-3 Hari" },
   { id: 8, title: "SP2D Terbit", desc: "Dana akan masuk ke rekening masing-masing! 🎉", icon: "💰", eta: "Cair!" },
+];
+
+const RATING_LABELS = [
+  "",
+  "Sangat Lambat",
+  "Kurang Memuaskan",
+  "Cukup Baik",
+  "Cepat & Tepat",
+  "Sangat Cepat & Transparan! 🎉"
 ];
 
 const CONFETTI_PIECES = Array.from({ length: 80 }, (_, i) => ({
@@ -79,6 +89,7 @@ export default function UangMakanPublicPage() {
   const [showHelpModal, setShowHelpModal] = useState(false);
   
   const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState<number | null>(null);
   const [hasRated, setHasRated] = useState(false);
   const [showArsipModal, setShowArsipModal] = useState(false);
   const [arsipData, setArsipData] = useState<ArsipItem[]>([]);
@@ -134,20 +145,36 @@ export default function UangMakanPublicPage() {
     };
   }, [currentStep, prevStep]);
 
-
   if (loading) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] gap-6">
-      <div className="relative flex items-center justify-center"><div className="absolute inset-0 animate-ping rounded-full bg-amber-400 opacity-20 scale-[2.5]" /><div className="h-14 w-14 border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin shadow-sm" /></div>
-      <p className="text-slate-500 text-xs font-bold tracking-widest uppercase animate-pulse">Memuat Data Uang Makan...</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] gap-6 relative overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-200/30 blur-[100px] rounded-full pointer-events-none" />
+      <div className="relative flex items-center justify-center">
+        <div className="absolute inset-0 animate-ping rounded-full bg-amber-400 opacity-20 scale-[2.5]" />
+        <div className="h-16 w-16 border-4 border-amber-100 border-t-amber-500 rounded-full animate-spin shadow-md" />
+      </div>
+      <div className="flex flex-col items-center gap-1.5 z-10">
+        <p className="text-slate-700 text-sm font-bold tracking-tight">Memuat Data SIMantu...</p>
+        <p className="text-slate-400 text-xs font-semibold tracking-wider uppercase animate-pulse">Monitoring Uang Makan</p>
+      </div>
     </div>
   );
 
   if (error) return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC] gap-5 p-8 text-center relative overflow-hidden">
-      <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] relative z-10 max-w-md w-full">
-        <div className="bg-rose-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"><WifiOff size={36} className="text-rose-500" /></div>
-        <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-3">Oops, Koneksi Terputus</h2>
-        <button onClick={fetchStatus} className="w-full py-4 bg-rose-600 text-white rounded-2xl text-sm font-bold shadow-lg hover:bg-rose-700 hover:-translate-y-1 transition-all flex items-center justify-center gap-2"><RefreshCcw size={18} /> Coba Muat Ulang</button>
+      <div className="p-2 rounded-[2.5rem] bg-gradient-to-b from-white via-slate-50 to-slate-100 border border-slate-200/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] relative z-10 max-w-md w-full">
+        <div className="bg-white p-8 sm:p-10 rounded-[calc(2.5rem-0.5rem)] border border-slate-100 flex flex-col items-center">
+          <div className="bg-rose-50 w-20 h-20 rounded-full flex items-center justify-center mb-6 border border-rose-100 shadow-inner">
+            <WifiOff size={32} className="text-rose-500" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-2 text-balance">Koneksi Terputus</h2>
+          <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6 text-pretty">Gagal menghubungkan ke server realtime database. Pastikan internet Anda aktif lalu coba kembali.</p>
+          <button
+            onClick={fetchStatus}
+            className="w-full py-4 bg-slate-900 hover:bg-amber-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg hover:shadow-amber-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+          >
+            <RefreshCcw size={16} /> Coba Muat Ulang
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -159,158 +186,428 @@ export default function UangMakanPublicPage() {
   const displayEstimasi = data?.estimasi ? data.estimasi : currentStepData.eta;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] font-sans selection:bg-amber-100 selection:text-amber-900 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-[#F8FAFC] font-sans selection:bg-amber-100 selection:text-amber-900 relative overflow-x-hidden">
       {showConfetti && <Confetti />}
 
+      {/* MODAL RIWAYAT ARSIP */}
       {showArsipModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowArsipModal(false)} />
-          <div className="relative w-full max-w-md bg-white rounded-[2.5rem] p-8 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 animate-fade-slide-up">
-            <button onClick={() => setShowArsipModal(false)} className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-50 rounded-full transition-colors"><X size={20} /></button>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="bg-amber-50 p-3 rounded-2xl text-amber-500"><History size={24} /></div>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">Riwayat Uang Makan</h3>
-            </div>
-            <div className="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
-              {arsipData.length === 0 ? (
-                <p className="text-center text-slate-500 py-6 font-medium text-sm">Belum ada data arsip sebelumnya.</p>
-              ) : (
-                arsipData.map((arsip, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div>
-                      <p className="font-black text-slate-800">{arsip.periode}</p>
-                      <p className="text-xs text-slate-500 font-medium">Cair: {new Date(arsip.tanggal_cair).toLocaleDateString("id-ID", { dateStyle: "medium" })}</p>
+          <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={() => setShowArsipModal(false)} />
+          <div className="relative w-full max-w-lg p-2 rounded-[2.5rem] bg-gradient-to-b from-white via-slate-50 to-slate-100 border border-slate-200/80 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.2)] animate-fade-slide-up">
+            <div className="bg-white rounded-[calc(2.5rem-0.5rem)] p-6 sm:p-8 border border-slate-100 relative">
+              <button
+                onClick={() => setShowArsipModal(false)}
+                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors active:scale-95"
+              >
+                <X size={20} />
+              </button>
+              <div className="flex items-center gap-3.5 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shadow-inner">
+                  <History size={22} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">Riwayat Pencairan Uang Makan</h3>
+                  <p className="text-xs text-slate-500 font-medium">Arsip periode pencairan yang telah sukses terbit SP2D</p>
+                </div>
+              </div>
+              <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1.5 custom-scrollbar">
+                {arsipData.length === 0 ? (
+                  <div className="py-12 text-center flex flex-col items-center justify-center gap-3">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-300">
+                      <History size={24} />
                     </div>
-                    <div className="bg-amber-100 text-amber-600 p-2 rounded-full"><Check size={16} strokeWidth={3}/></div>
+                    <p className="text-slate-500 font-semibold text-sm">Belum ada arsip tersimpan.</p>
                   </div>
-                ))
-              )}
+                ) : (
+                  arsipData.map((arsip, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-4 bg-slate-50/80 hover:bg-white rounded-2xl border border-slate-200/70 hover:border-amber-200 hover:shadow-xs transition-all"
+                    >
+                      <div className="space-y-1">
+                        <p className="font-black text-slate-900 text-sm tracking-tight">{arsip.periode}</p>
+                        <p className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
+                          <Calendar size={12} className="text-amber-500" />
+                          {new Date(arsip.tanggal_cair).toLocaleDateString("id-ID", { dateStyle: "long" })}
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200/70 text-[11px] font-bold">
+                        <Check size={14} strokeWidth={3} /> Cair
+                      </span>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* MODAL PUSAT BANTUAN */}
       {showHelpModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setShowHelpModal(false)} />
-          <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] p-8 sm:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex flex-col items-center text-center animate-fade-slide-up">
-            <button onClick={() => setShowHelpModal(false)} className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-50 rounded-full transition-colors duration-300"><X size={20} /></button>
-            <div className="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-amber-100/50"><HelpCircle size={36} className="text-amber-500 animate-wiggle" /></div>
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-3">Butuh Bantuan?</h3>
-            <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8">Hai! Jika Anda memiliki kendala, jangan ragu untuk menghubungi <strong className="text-slate-700">Tim Bendahara</strong>.</p>
-            <button onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20Tim%20Keuangan,%20saya%20ingin%20bertanya%20terkait%20Uang%20Makan...', '_blank')} className="w-full py-4 bg-amber-500 text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-lg hover:bg-amber-600 hover:-translate-y-1 transition-all mb-3">Chat WhatsApp</button>
-            <button onClick={() => setShowHelpModal(false)} className="w-full py-3 text-slate-500 text-xs font-bold uppercase tracking-widest hover:text-slate-800">Tutup</button>
+          <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-md transition-opacity" onClick={() => setShowHelpModal(false)} />
+          <div className="relative w-full max-w-md p-2 rounded-[2.5rem] bg-gradient-to-b from-white via-slate-50 to-slate-100 border border-slate-200/80 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.2)] animate-fade-slide-up">
+            <div className="bg-white rounded-[calc(2.5rem-0.5rem)] p-8 sm:p-10 border border-slate-100 flex flex-col items-center text-center relative">
+              <button
+                onClick={() => setShowHelpModal(false)}
+                className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-colors active:scale-95"
+              >
+                <X size={20} />
+              </button>
+              <div className="w-20 h-20 bg-amber-50 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner border border-amber-100">
+                <HelpCircle size={36} className="text-amber-500 animate-wiggle" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2.5">Pusat Bantuan Keuangan</h3>
+              <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 text-pretty">
+                Ada kendala atau pertanyaan terkait alur pencairan Uang Makan? Tim Bendahara siap membantu Anda via WhatsApp.
+              </p>
+              <button
+                onClick={() => window.open('https://wa.me/6281234567890?text=Halo%20Tim%20Keuangan,%20saya%20ingin%20bertanya%20terkait%20Uang%20Makan...', '_blank')}
+                className="w-full py-4 px-6 bg-amber-500 hover:bg-amber-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg shadow-amber-500/25 hover:shadow-amber-500/35 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-between group mb-3"
+              >
+                <span className="flex-1 text-center pl-6">Chat Tim Bendahara</span>
+                <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center transition-transform group-hover:scale-110 group-hover:translate-x-0.5">
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </span>
+              </button>
+              <button
+                onClick={() => setShowHelpModal(false)}
+                className="w-full py-3 text-slate-400 hover:text-slate-700 text-xs font-bold uppercase tracking-wider transition-colors"
+              >
+                Tutup Jendela
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-amber-100/50 to-transparent blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-orange-100/30 blur-[100px] rounded-full pointer-events-none" />
-      
-      <div className="fixed top-6 inset-x-0 mx-auto w-[calc(100%-2rem)] max-w-5xl z-50 pointer-events-none">
-        <nav className="pointer-events-auto bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] px-4 py-3 flex items-center justify-between transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+      {/* AMBIENT BACKGROUND GLOW */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-gradient-to-b from-amber-200/35 via-orange-100/20 to-transparent blur-[140px] rounded-full pointer-events-none z-0" />
+      <div className="fixed -top-40 right-[-10%] w-[500px] h-[500px] bg-gradient-to-bl from-orange-200/25 to-transparent blur-[120px] rounded-full pointer-events-none z-0" />
+
+      {/* FLOATING GLASS NAVBAR */}
+      <div className="fixed top-4 inset-x-0 mx-auto w-[calc(100%-2rem)] max-w-5xl z-50 pointer-events-none">
+        <nav className="pointer-events-auto bg-white/85 backdrop-blur-xl border border-white/90 shadow-[0_10px_35px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.02)] rounded-[2rem] px-4 py-2.5 flex items-center justify-between transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 bg-white rounded-[14px] shadow-sm border border-slate-100 flex items-center justify-center overflow-hidden shrink-0"><Image src="/logo.jpg" alt="Logo" width={40} height={40} className="w-full h-full object-cover" priority /></div>
+            <div className="w-10 h-10 bg-white rounded-2xl shadow-xs border border-slate-200/60 flex items-center justify-center overflow-hidden shrink-0 ring-1 ring-slate-900/5">
+              <Image src="/logo.jpg" alt="Logo" width={40} height={40} className="w-full h-full object-cover" priority />
+            </div>
             <div className="flex flex-col justify-center">
-              <span className="text-[17px] font-black tracking-tight text-slate-800 leading-none">SIMantu<span className="text-amber-500">.</span></span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">Sistem Monitoring KN Soppeng</span>
+              <span className="text-[17px] font-black tracking-tight text-slate-900 leading-none">
+                SIMantu<span className="text-amber-500">.</span>
+              </span>
+              <span className="text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mt-0.5">
+                Monitoring KN Soppeng
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100"><Calendar size={14} className="text-amber-500" /><span className="text-[12px] font-bold text-slate-600">{data?.periode || "Periode -"}</span></div>
-            <div className={`flex items-center gap-2 px-3.5 py-2 rounded-full border transition-all duration-500 ${isOnline ? "bg-amber-50 border-amber-100 text-amber-600" : "bg-rose-50 border-rose-100 text-rose-600"}`}>{isOnline ? <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" /> : <WifiOff size={14} />}<span className="text-[11px] font-bold hidden sm:inline">{isOnline ? "Terhubung" : "Offline"}</span></div>
+            <div className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 bg-slate-50/90 rounded-full border border-slate-200/70 shadow-xs">
+              <Calendar size={13} className="text-amber-600" />
+              <span className="text-[12px] font-bold text-slate-700 tracking-tight">{data?.periode || "Periode -"}</span>
+            </div>
+            <div className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full border transition-all duration-300 shadow-xs ${isOnline ? "bg-amber-50/90 border-amber-200/80 text-amber-800" : "bg-rose-50 border-rose-200 text-rose-700"}`}>
+              {isOnline ? (
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                </span>
+              ) : (
+                <WifiOff size={13} />
+              )}
+              <span className="text-[11px] font-extrabold hidden sm:inline uppercase tracking-wider">{isOnline ? "Live Realtime" : "Offline"}</span>
+            </div>
           </div>
         </nav>
       </div>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-5 sm:px-8 pt-40 sm:pt-48 pb-20 relative z-20">
+      {/* MAIN CONTAINER */}
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-8 pt-32 sm:pt-40 pb-24 relative z-20">
 
+        {/* HERO SECTION */}
         <div className="mb-12 max-w-3xl text-center md:text-left mx-auto md:mx-0 flex flex-col items-center md:items-start animate-fade-slide-up">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-8">
-            <div className="flex bg-slate-200/50 p-1.5 rounded-full border border-slate-200/60 shadow-inner backdrop-blur-sm">
-              <Link href="/" className="flex items-center gap-2 px-5 sm:px-6 py-2.5 text-slate-500 hover:text-slate-800 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-widest transition-all"><Wallet size={16} /> Tunjangan Kinerja</Link>
-              <Link href="/uang-makan" className="flex items-center gap-2 px-5 sm:px-6 py-2.5 bg-white text-amber-600 rounded-full text-[11px] sm:text-xs font-black uppercase tracking-widest shadow-sm border border-slate-100"><Utensils size={16} /> Uang Makan</Link>
+          
+          {/* EYEBROW BADGE */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-800 text-[10px] sm:text-[11px] font-black uppercase tracking-wider mb-5 shadow-xs">
+            <ShieldCheck size={14} className="text-amber-600" />
+            <span>Transparansi Pengelolaan Anggaran</span>
+          </div>
+
+          {/* TAB SWITCHER */}
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 mb-8">
+            <div className="flex bg-slate-200/60 p-1.5 rounded-full border border-slate-300/60 shadow-inner backdrop-blur-md">
+              <Link
+                href="/"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2 text-slate-500 hover:text-slate-800 rounded-full text-xs font-bold uppercase tracking-wider transition-all hover:bg-white/40"
+              >
+                <Wallet size={15} /> Tunjangan Kinerja
+              </Link>
+              <Link
+                href="/uang-makan"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2 bg-white text-amber-700 rounded-full text-xs font-black uppercase tracking-wider shadow-sm border border-slate-200/60 transition-all"
+              >
+                <Utensils size={15} /> Uang Makan
+              </Link>
             </div>
-            <button onClick={() => { fetchArsip(); setShowArsipModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-widest shadow-sm border border-slate-200 transition-all">
-              <History size={16} /> Riwayat
+            <button
+              onClick={() => { fetchArsip(); setShowArsipModal(true); }}
+              className="flex items-center gap-1.5 px-4 py-2 bg-white/90 hover:bg-amber-50 text-slate-600 hover:text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider shadow-xs border border-slate-200/80 hover:border-amber-200 active:scale-95 transition-all"
+            >
+              <History size={14} /> Riwayat
             </button>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-[4.5rem] font-black text-slate-900 tracking-tight leading-[1.1] mb-6 text-balance">Pencairan Uang Makan, <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">Kini Lebih Transparan.</span></h1>
-          <p className="text-slate-500 text-lg font-medium leading-relaxed max-w-xl text-center md:text-left text-pretty">Dapatkan pembaruan langsung dari tim pengelola keuangan. Lacak status berkas Anda dengan mudah dan tenang.</p>
+          <h1 className="text-4xl sm:text-5xl md:text-[4.25rem] font-black text-slate-950 tracking-tight leading-[1.08] mb-5 text-balance">
+            Pencairan Uang Makan, <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-amber-500">
+              Kini Lebih Transparan.
+            </span>
+          </h1>
+          <p className="text-slate-500 text-base sm:text-lg font-medium leading-relaxed max-w-xl text-center md:text-left text-pretty">
+            Pantau tahapan verifikasi berkas absensi hingga terbit SP2D uang makan secara real-time dan terbuka.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
-          <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-6 sm:p-12 relative overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100">
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-bl from-amber-50 to-transparent pointer-events-none rounded-bl-full opacity-60" />
-            <div className="relative z-10 flex flex-col h-full justify-between">
-              <div className="flex flex-wrap items-center gap-3 mb-8">
-                <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-amber-50 border border-amber-100 rounded-full shadow-sm relative overflow-hidden"><div className="absolute inset-0 bg-gradient-to-r from-amber-100/0 via-white/60 to-amber-100/0 translate-x-[-100%] animate-shimmer" /><span className="relative flex h-2.5 w-2.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" /><span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" /></span><span className="text-[11px] sm:text-xs font-black uppercase tracking-widest text-amber-700 relative z-10">Posisi Saat Ini</span></div>
-                {!isDisbursed && !data?.is_rejected && (<span className="px-4 py-2 bg-slate-50 text-slate-600 border border-slate-100 rounded-full text-[11px] sm:text-xs font-bold flex items-center gap-1.5 shadow-sm"><Clock size={14} className="text-slate-400 animate-pulse" /> Estimasi: {displayEstimasi}</span>)}
-              </div>
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left mb-6 sm:mb-0">
-                <div key={safeStep} className="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100/60 rounded-[2rem] flex items-center justify-center text-5xl sm:text-6xl shrink-0 shadow-inner animate-float">{currentStepData.icon}</div>
-                <div className="pt-2"><p className="text-xs text-slate-400 font-black uppercase tracking-widest mb-2 flex items-center justify-center sm:justify-start gap-1.5">Tahap <span className="tabular-nums">{safeStep}</span> <ChevronRight size={14}/> <span className="tabular-nums">8</span></p><h2 className="text-3xl sm:text-4xl font-black text-slate-800 tracking-tight mb-3 text-balance">{currentStepData.title}</h2><p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-md font-medium text-pretty">{currentStepData.desc}</p></div>
-              </div>
-              <div className="mt-8 sm:mt-14 bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                <div className="flex justify-between items-end mb-3"><span className="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Penyelesaian</span><span className="text-2xl font-black text-amber-500 tabular-nums">{progressPct}%</span></div>
-                <div className="h-4 w-full bg-slate-200/60 rounded-full overflow-hidden p-0.5"><div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-[1500ms] ease-out relative" style={{ width: `${progressPct}%` }}><div className="absolute inset-0 bg-white/20 w-full animate-pulse"></div></div></div>
-              </div>
-            </div>
-          </div>
+        {/* HERO STATUS CARDS (DOUBLE-BEZEL ARCHITECTURE) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-14">
 
-          <div className="flex flex-col gap-6">
-            {data?.catatan && data.catatan !== "-" && data.catatan.trim() !== "" ? (
-              <div className="bg-orange-50 border border-orange-100 rounded-[2rem] p-8 flex-1 flex flex-col justify-center relative overflow-hidden"><div className="bg-white/60 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center text-orange-500 mb-4 shadow-sm relative z-10"><BellRing size={20} className="animate-wiggle" /></div><p className="text-xs font-bold uppercase tracking-wider text-orange-700/60 mb-2 relative z-10">Papan Pengumuman</p><p className="font-bold text-orange-900 text-[15px] leading-relaxed relative z-10 text-pretty">{data.catatan}</p></div>
-            ) : (
-              <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex-1 flex flex-col justify-center"><div className="bg-amber-50 w-12 h-12 rounded-2xl flex items-center justify-center text-amber-500 mb-4"><CheckCheck size={20} /></div><p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Status Sistem</p><p className="font-bold text-slate-800 text-lg">Semua Normal</p></div>
-            )}
-            <div className="bg-white border border-slate-100 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.02)] flex-1 flex flex-col justify-center"><p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Terakhir Diperbarui</p><div className="text-3xl font-black text-slate-800 tracking-tight mb-2 tabular-nums">{data?.updated_at ? new Date(data.updated_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "—"}</div><p className="text-sm font-medium text-slate-500 flex items-center gap-2"><Calendar size={14} className="text-slate-400" />{data?.updated_at ? new Date(data.updated_at).toLocaleDateString("id-ID", { dateStyle: "long" }) : "—"}</p></div>
-          </div>
-        </div>
+          {/* MAIN STAGE STATUS CARD */}
+          <div className="lg:col-span-2 p-2 sm:p-2.5 rounded-[2.5rem] bg-gradient-to-b from-white via-slate-50/60 to-slate-100/60 border border-slate-200/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]">
+            <div className="rounded-[calc(2.5rem-0.625rem)] bg-white p-6 sm:p-10 border border-slate-100/90 relative overflow-hidden flex flex-col justify-between h-full">
+              
+              {/* Subtle inner top-right glow */}
+              <div className="absolute top-0 right-0 w-[350px] h-[350px] bg-gradient-to-bl from-amber-100/40 via-orange-50/20 to-transparent pointer-events-none rounded-bl-full" />
+              
+              <div className="relative z-10 flex flex-col h-full justify-between">
+                
+                {/* Status Badges Header */}
+                <div className="flex flex-wrap items-center gap-3 mb-8">
+                  <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-amber-50 border border-amber-200/80 rounded-full shadow-xs relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-100/0 via-white/80 to-amber-100/0 translate-x-[-100%] animate-shimmer" />
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+                    </span>
+                    <span className="text-[11px] font-black uppercase tracking-wider text-amber-800 relative z-10">
+                      Posisi Saat Ini
+                    </span>
+                  </div>
 
-        {data?.is_rejected && (
-          <div className="mb-16 bg-rose-50 border border-rose-100 rounded-[2rem] p-8 flex flex-col sm:flex-row items-center gap-6 shadow-sm"><div className="bg-white w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm"><X size={24} className="text-rose-500" /></div><div><h3 className="text-xl font-black text-rose-900 tracking-tight mb-2">Pencairan Tertahan (Revisi SPM)</h3><p className="font-medium text-rose-700 text-sm leading-relaxed">Berkas saat ini dikembalikan oleh KPPN. Jangan khawatir, Tim Keuangan sedang melakukan revisi dokumen.</p></div></div>
-        )}
+                  {!isDisbursed && !data?.is_rejected && (
+                    <span className="px-3.5 py-1.5 bg-slate-50 text-slate-600 border border-slate-200/80 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow-xs">
+                      <Clock size={13} className="text-slate-400 animate-pulse" />
+                      Estimasi: <strong className="text-slate-800 font-extrabold">{displayEstimasi}</strong>
+                    </span>
+                  )}
+                </div>
 
-        {isDisbursed && (
-          <div className="mb-16 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100 rounded-[2rem] p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm relative overflow-hidden animate-fade-slide-up">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shrink-0 shadow-sm"><Sparkles size={28} className="text-amber-500 animate-pulse" /></div>
-              <div>
-                <h3 className="text-2xl font-black text-amber-900 tracking-tight mb-2">Uang Makan Selesai Diproses! 🎉</h3>
-                <p className="font-medium text-amber-700 text-sm leading-relaxed">SP2D telah terbit. Mutasi rekening akan masuk secara berkala mulai hari ini.</p>
-              </div>
-            </div>
-            
-            <div className="bg-white/60 backdrop-blur-sm p-5 rounded-3xl border border-white shrink-0 w-full md:w-auto text-center">
-              {!hasRated ? (
-                <>
-                  <p className="text-xs font-bold text-amber-800 uppercase tracking-widest mb-3">Nilai Transparansi Kami</p>
-                  <div className="flex items-center justify-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button 
-                        key={star} onClick={() => submitRating(star)} 
-                        className={`p-2 rounded-full transition-all duration-300 ${rating >= star ? 'text-amber-500 bg-amber-100 scale-110' : 'text-slate-300 hover:text-amber-400 hover:bg-slate-50'}`}
+                {/* Stage Info Hero */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left mb-6 sm:mb-2">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[2rem] p-1.5 bg-gradient-to-b from-amber-100 to-orange-50 border border-amber-200/60 shadow-inner shrink-0">
+                    <div className="w-full h-full rounded-[calc(2rem-0.375rem)] bg-white/95 backdrop-blur-sm flex items-center justify-center text-5xl sm:text-6xl shadow-sm animate-float">
+                      {currentStepData.icon}
+                    </div>
+                  </div>
+                  <div className="pt-1.5">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-2.5">
+                      <span>Tahap</span>
+                      <span className="tabular-nums font-extrabold text-amber-700">{safeStep}</span>
+                      <ChevronRight size={12} className="text-slate-400" />
+                      <span className="tabular-nums">8</span>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-2.5 text-balance">
+                      {currentStepData.title}
+                    </h2>
+                    <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-md font-medium text-pretty">
+                      {currentStepData.desc}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Progress Bar Container with Milestones */}
+                <div className="mt-8 sm:mt-10 bg-slate-50/90 p-5 sm:p-6 rounded-[2rem] border border-slate-200/70 shadow-xs">
+                  <div className="flex justify-between items-end mb-3">
+                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                      Progres Penyelesaian
+                    </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl sm:text-3xl font-black text-amber-600 tabular-nums">
+                        {progressPct}%
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Track */}
+                  <div className="h-4 w-full bg-slate-200/70 rounded-full overflow-hidden p-0.5 relative shadow-inner">
+                    <div
+                      className="h-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-400 rounded-full transition-all duration-[1500ms] ease-out relative shadow-sm"
+                      style={{ width: `${progressPct}%` }}
+                    >
+                      <div className="absolute inset-0 bg-white/20 w-full animate-pulse" />
+                      <div className="absolute right-0 top-0 bottom-0 w-3 bg-white/50 rounded-full animate-progress-head" />
+                    </div>
+                  </div>
+
+                  {/* Milestone Ticks */}
+                  <div className="flex justify-between items-center px-1 mt-2.5">
+                    {STEPS.map((s) => (
+                      <span
+                        key={s.id}
+                        className={`text-[9px] font-black tabular-nums transition-colors duration-300 ${s.id <= safeStep ? "text-amber-700" : "text-slate-300"}`}
                       >
-                        <Star size={28} fill={rating >= star ? "currentColor" : "none"} strokeWidth={2.5}/>
-                      </button>
+                        {s.id}
+                      </span>
                     ))}
                   </div>
-                </>
-              ) : (
-                <div className="py-2 animate-fade-slide-up">
-                  <div className="w-10 h-10 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-2"><CheckCheck size={20} /></div>
-                  <p className="text-sm font-black text-amber-900">Terima Kasih!</p>
-                  <p className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mt-1">Penilaian Anda Tersimpan</p>
                 </div>
-              )}
+
+              </div>
+            </div>
+          </div>
+
+          {/* SIDE CARDS COLUMN */}
+          <div className="flex flex-col gap-6">
+
+            {/* Papan Pengumuman / Status Sistem Card */}
+            {data?.catatan && data.catatan !== "-" && data.catatan.trim() !== "" ? (
+              <div className="p-2 rounded-[2.5rem] bg-gradient-to-b from-amber-100/70 via-amber-50 to-orange-50/40 border border-amber-200/80 shadow-[0_15px_40px_-15px_rgba(245,158,11,0.15)] flex-1 flex flex-col">
+                <div className="bg-amber-50/60 rounded-[calc(2.5rem-0.5rem)] p-7 flex-1 flex flex-col justify-center relative overflow-hidden border border-amber-100">
+                  <div className="bg-white/80 backdrop-blur-sm w-12 h-12 rounded-2xl flex items-center justify-center text-amber-600 mb-4 shadow-xs border border-amber-100">
+                    <BellRing size={20} className="animate-wiggle" />
+                  </div>
+                  <p className="text-[11px] font-black uppercase tracking-wider text-amber-800/80 mb-2">
+                    Papan Pengumuman
+                  </p>
+                  <p className="font-bold text-amber-950 text-sm leading-relaxed text-pretty">
+                    {data.catatan}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="p-2 rounded-[2.5rem] bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.04)] flex-1 flex flex-col">
+                <div className="bg-white rounded-[calc(2.5rem-0.5rem)] p-7 border border-slate-100 flex-1 flex flex-col justify-center">
+                  <div className="bg-amber-50 w-12 h-12 rounded-2xl flex items-center justify-center text-amber-600 mb-4 border border-amber-100 shadow-inner">
+                    <CheckCheck size={20} />
+                  </div>
+                  <p className="text-[11px] font-black uppercase tracking-wider text-slate-400 mb-1">
+                    Status Layanan
+                  </p>
+                  <p className="font-black text-slate-900 text-lg tracking-tight">
+                    Semua Berjalan Normal
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Terakhir Diperbarui Card */}
+            <div className="p-2 rounded-[2.5rem] bg-gradient-to-b from-white to-slate-50 border border-slate-200/80 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.04)] flex-1 flex flex-col">
+              <div className="bg-white rounded-[calc(2.5rem-0.5rem)] p-7 border border-slate-100 flex-1 flex flex-col justify-center">
+                <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider mb-2.5">
+                  Terakhir Diperbarui
+                </p>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-2 tabular-nums">
+                  {data?.updated_at ? new Date(data.updated_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }) : "—"}
+                </div>
+                <p className="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+                  <Calendar size={13} className="text-slate-400" />
+                  {data?.updated_at ? new Date(data.updated_at).toLocaleDateString("id-ID", { dateStyle: "long" }) : "—"}
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ALERT REVISI SPM (IF REJECTED) */}
+        {data?.is_rejected && (
+          <div className="mb-14 p-2 rounded-[2.5rem] bg-gradient-to-b from-rose-100 via-rose-50 to-white border border-rose-200 shadow-sm animate-fade-slide-up">
+            <div className="bg-rose-50/70 rounded-[calc(2.5rem-0.5rem)] p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 border border-rose-100">
+              <div className="bg-white w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border border-rose-200 text-rose-600">
+                <X size={26} strokeWidth={3} />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-rose-950 tracking-tight mb-1.5">
+                  Pencairan Tertahan (Revisi Berkas SPM)
+                </h3>
+                <p className="font-medium text-rose-700 text-sm leading-relaxed text-pretty">
+                  Berkas dikembalikan untuk penyesuaian oleh KPPN. Tim Keuangan sedang melakukan perbaikan dokumen secara intensif.
+                </p>
+              </div>
             </div>
           </div>
         )}
 
-        <div className="mb-8 flex items-center justify-between px-2"><h3 className="text-base font-black text-slate-800 tracking-tight flex items-center gap-2"><LayoutDashboard size={18} className="text-amber-500" /> Rincian Alur Proses</h3></div>
+        {/* CELEBRATION & RATING CARD (IF DISBURSED) */}
+        {isDisbursed && (
+          <div className="mb-14 p-2 rounded-[2.5rem] bg-gradient-to-r from-amber-200 via-orange-200 to-amber-300 border border-amber-300 shadow-[0_20px_50px_-15px_rgba(245,158,11,0.25)] animate-fade-slide-up">
+            <div className="bg-white/95 backdrop-blur-md rounded-[calc(2.5rem-0.5rem)] p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5">
+                <div className="w-16 h-16 rounded-[1.75rem] bg-amber-50 border border-amber-100 flex items-center justify-center shrink-0 shadow-inner">
+                  <Sparkles size={32} className="text-amber-500 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2">
+                    Uang Makan Selesai Diproses! 🎉
+                  </h3>
+                  <p className="font-medium text-slate-600 text-sm sm:text-base leading-relaxed max-w-lg text-pretty">
+                    Surat Perintah Pencairan Dana (SP2D) telah terbit. Saldo akan masuk ke rekening Anda secara bertahap.
+                  </p>
+                </div>
+              </div>
+              
+              {/* INTERACTIVE RATING WIDGET */}
+              <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-200/80 shrink-0 w-full md:w-auto text-center shadow-xs">
+                {!hasRated ? (
+                  <>
+                    <p className="text-[11px] font-black text-slate-700 uppercase tracking-widest mb-3">
+                      Beri Penilaian Layanan
+                    </p>
+                    <div className="flex items-center justify-center gap-1.5 mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button 
+                          key={star}
+                          onClick={() => submitRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(null)}
+                          className={`p-2 rounded-xl transition-all duration-200 active:scale-90 ${(hoverRating !== null ? hoverRating >= star : rating >= star) ? 'text-amber-400 scale-110' : 'text-slate-300 hover:text-amber-300'}`}
+                        >
+                          <Star size={28} fill={(hoverRating !== null ? hoverRating >= star : rating >= star) ? "currentColor" : "none"} strokeWidth={2.5}/>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-xs font-bold text-amber-600 min-h-[18px]">
+                      {RATING_LABELS[hoverRating || rating] || "Pilih 1 - 5 Bintang"}
+                    </p>
+                  </>
+                ) : (
+                  <div className="py-2 animate-fade-slide-up">
+                    <div className="w-10 h-10 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <CheckCheck size={20} />
+                    </div>
+                    <p className="text-sm font-black text-amber-950">Terima Kasih!</p>
+                    <p className="text-[10px] font-bold text-amber-700 uppercase tracking-widest mt-1">Ulasan Anda Telah Dicatat</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
+        {/* TIMELINE ALUR TAHAPAN SECTION */}
+        <div className="mb-6 flex items-center justify-between px-2">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-100">
+              <LayoutDashboard size={18} />
+            </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">Rincian Alur Proses</h3>
+              <p className="text-xs text-slate-500 font-medium">8 tahapan standar operasional pencairan Uang Makan Pegawai</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 8 STEPS GRID (LINEAR-TIER CARDS) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 relative">
           {STEPS.map((step, index) => {
             const stepNum = index + 1;
@@ -319,36 +616,112 @@ export default function UangMakanPublicPage() {
             const isRejected = data?.is_rejected && stepNum === 7;
             const isFixing = data?.is_rejected && stepNum === 6 && safeStep === 6;
             const isPending = !isDone && !isCurrent;
-            const statusClass = isDone && !isRejected ? "bg-white border-slate-200 shadow-[0_4px_15px_rgb(0,0,0,0.02)]" : (isCurrent || isFixing) && !isRejected ? "bg-white border-amber-400 ring-4 ring-amber-50 shadow-[0_15px_40px_-10px_rgba(245,158,11,0.2)] scale-[1.02] z-10" : isRejected ? "bg-rose-50 border-rose-300 ring-4 ring-rose-50" : "bg-slate-50/50 border-slate-200 border-dashed opacity-70"; 
 
             return (
-              <div key={index} className={`relative p-6 rounded-[2rem] border-2 transition-all duration-500 ease-out group ${statusClass}`}>
-                {index < STEPS.length - 1 && (index + 1) % 4 !== 0 && (<div className="hidden lg:block absolute top-11 -right-5 w-5 h-[2px] z-0"><div className={`w-full h-full ${isDone ? 'bg-amber-400' : 'bg-slate-200'}`}></div></div>)}
-                <div className="flex items-start justify-between mb-5 relative z-10">
-                  <div className={`w-12 h-12 rounded-[1rem] flex items-center justify-center font-black text-base shadow-sm transition-colors duration-500 ${isDone && !isRejected ? "bg-amber-100 text-amber-600" : ""} ${(isCurrent || isFixing) && !isRejected ? "bg-amber-500 text-white shadow-amber-500/30" : ""} ${isRejected ? "bg-rose-500 text-white" : ""} ${isPending && !isRejected ? "bg-white text-slate-400 border border-slate-200" : ""}`}>{isDone && !isRejected ? <Check size={20} strokeWidth={3} /> : isRejected ? <X size={20} strokeWidth={3} /> : stepNum}</div>
-                  <div className="flex flex-col items-end gap-2"><span className={`text-[32px] transition-all duration-500 ease-out filter drop-shadow-sm ${isCurrent && !isRejected ? "scale-110 -rotate-3" : isPending ? "grayscale opacity-50" : ""}`}>{step.icon}</span></div>
+              <div
+                key={index}
+                className={`relative p-6 rounded-[2rem] border transition-all duration-300 ease-out group flex flex-col justify-between ${
+                  (isCurrent || isFixing) && !isRejected
+                    ? "bg-gradient-to-b from-amber-50/80 via-white to-white border-amber-400 ring-4 ring-amber-500/15 shadow-[0_18px_35px_-10px_rgba(245,158,11,0.22)] scale-[1.02] z-10"
+                    : isDone && !isRejected
+                    ? "bg-white border-slate-200/80 shadow-xs hover:border-amber-200 hover:shadow-sm"
+                    : isRejected
+                    ? "bg-rose-50/70 border-rose-300 ring-4 ring-rose-500/15"
+                    : "bg-slate-50/60 border-slate-200/60 opacity-80 hover:opacity-100 hover:bg-white hover:border-slate-300 hover:shadow-xs"
+                }`}
+              >
+                <div>
+                  <div className="flex items-start justify-between mb-5 relative z-10">
+                    <div
+                      className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-xs transition-colors duration-300 ${
+                        isDone && !isRejected
+                          ? "bg-amber-100 text-amber-800"
+                          : (isCurrent || isFixing) && !isRejected
+                          ? "bg-amber-500 text-white shadow-amber-500/30"
+                          : isRejected
+                          ? "bg-rose-600 text-white"
+                          : "bg-white text-slate-400 border border-slate-200"
+                      }`}
+                    >
+                      {isDone && !isRejected ? (
+                        <Check size={18} strokeWidth={3} />
+                      ) : isRejected ? (
+                        <X size={18} strokeWidth={3} />
+                      ) : (
+                        <span className="tabular-nums">{stepNum}</span>
+                      )}
+                    </div>
+                    <span className={`text-[30px] transition-transform duration-300 group-hover:scale-110 ${isPending ? "grayscale opacity-40" : ""}`}>
+                      {step.icon}
+                    </span>
+                  </div>
+
+                  <div className="min-h-[55px] mb-4">
+                    <h4 className={`font-black text-[15px] leading-snug mb-1 tracking-tight ${isCurrent && !isRejected ? "text-slate-900" : isPending && !isRejected ? "text-slate-500" : "text-slate-800"}`}>
+                      {step.title}
+                    </h4>
+                    <p className="text-[12px] text-slate-500 font-medium leading-relaxed text-pretty">
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-h-[50px] mb-4"><h4 className={`font-black text-[15px] leading-tight mb-1.5 tracking-tight ${isCurrent && !isRejected ? "text-slate-900" : isPending && !isRejected ? "text-slate-500" : "text-slate-800"}`}>{step.title}</h4><p className="text-[13px] text-slate-500 font-medium leading-relaxed">{step.desc}</p></div>
-                <div className="pt-4 border-t border-slate-100/80 flex items-center justify-between">
-                  {isCurrent && !data?.is_rejected ? (<div className="flex items-center gap-1.5 text-[10px] font-black text-amber-600 uppercase tracking-widest bg-amber-50 px-2.5 py-1.5 rounded-lg w-full justify-center border border-amber-100"><span className="relative flex h-1.5 w-1.5"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span><span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span></span>Sedang Diproses</div>) : isDone && !data?.is_rejected ? (<div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-full justify-center"><CheckCheck size={14} className="text-amber-400" /> Selesai</div>) : isFixing ? (<div className="flex items-center gap-1.5 text-[10px] font-black text-rose-600 uppercase tracking-widest bg-rose-50 px-2.5 py-1.5 rounded-lg w-full justify-center border border-rose-100"><X size={12} strokeWidth={3} /> Perbaikan Berkas</div>) : (<div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-full justify-center"><Clock size={12} className="opacity-70" /> {step.eta}</div>)}
+
+                {/* BOTTOM STATUS TAG */}
+                <div className="pt-4 border-t border-slate-100">
+                  {isCurrent && !data?.is_rejected ? (
+                    <div className="flex items-center gap-1.5 text-[10px] font-black text-amber-800 uppercase tracking-widest bg-amber-50 px-2.5 py-1.5 rounded-xl w-full justify-center border border-amber-200/80 shadow-xs">
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500" />
+                      </span>
+                      Sedang Diproses
+                    </div>
+                  ) : isDone && !data?.is_rejected ? (
+                    <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-full justify-center">
+                      <CheckCheck size={14} className="text-amber-500" /> Selesai
+                    </div>
+                  ) : isFixing ? (
+                    <div className="flex items-center gap-1 text-[10px] font-black text-rose-700 uppercase tracking-widest bg-rose-50 px-2.5 py-1.5 rounded-xl w-full justify-center border border-rose-200">
+                      <X size={12} strokeWidth={3} /> Perbaikan Berkas
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest w-full justify-center">
+                      <Clock size={11} className="opacity-60" /> {step.eta}
+                    </div>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
+
       </main>
 
-      <footer className="w-full bg-white border-t border-slate-200/60 mt-auto py-8 text-center relative z-20">
+      {/* FOOTER */}
+      <footer className="w-full bg-white/80 backdrop-blur-md border-t border-slate-200/70 mt-auto py-8 text-center relative z-20">
         <div className="max-w-5xl mx-auto px-6">
-          <p className="text-sm text-slate-500 font-medium">&copy; TA 2026 <span className="font-bold text-slate-700">Kejaksaan Negeri Soppeng</span>. Hak Cipta Dilindungi.</p>
-          <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mt-2 flex items-center justify-center gap-1">Built with <HeartPulse size={10} className="text-rose-400" /> by Pranata Komputer 625</p>
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            &copy; TA 2026 <strong className="text-slate-800">Kejaksaan Negeri Soppeng</strong>. Hak Cipta Dilindungi.
+          </p>
+          <p className="text-[10px] uppercase tracking-widest font-bold text-slate-400 mt-2 flex items-center justify-center gap-1.5">
+            Sistem Informasi Monitoring Tukin & Uang Makan • Pranata Komputer 625
+          </p>
         </div>
       </footer>
 
-      <button onClick={() => setShowHelpModal(true)} className="fixed bottom-8 right-8 px-5 py-4 bg-slate-900 text-white rounded-full flex items-center gap-3 shadow-[0_10px_30px_rgb(0,0,0,0.15)] hover:bg-amber-500 hover:-translate-y-1 hover:shadow-amber-500/30 transition-all duration-300 ease-out active:scale-95 z-50 group">
-        <HelpCircle size={20} />
-        <span className="text-sm font-bold pr-1 hidden sm:inline">Pusat Bantuan</span>
+      {/* FLOATING ACTION BUTTON (PUSAT BANTUAN) */}
+      <button
+        onClick={() => setShowHelpModal(true)}
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 pl-4 pr-5 py-3.5 bg-slate-900 text-white rounded-full flex items-center gap-3 shadow-[0_12px_35px_rgba(0,0,0,0.2)] hover:bg-amber-600 hover:shadow-amber-600/30 hover:-translate-y-1 transition-all duration-300 active:scale-95 z-40 group"
+      >
+        <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:rotate-12 transition-transform">
+          <HelpCircle size={18} />
+        </span>
+        <span className="text-xs font-black uppercase tracking-wider hidden sm:inline">
+          Bantuan
+        </span>
       </button>
+
     </div>
   );
 }
