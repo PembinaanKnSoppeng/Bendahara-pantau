@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagram Alur & Flowchart Sistem SIMANTU - Kejaksaan Negeri Soppeng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #047857;
+      --primary-dark: #064e3b;
+      --primary-light: #10b981;
+      --primary-soft: #ecfdf5;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --amber-500: #f59e0b;
+      --amber-400: #fbbf24;
+      --rose-500: #f43f5e;
+      --rose-600: #e11d48;
+      --indigo-500: #6366f1;
+      --indigo-400: #818cf8;
+      --cyan-500: #06b6d4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* TOP BAR */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #047857, #10b981);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .badge-satker {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-tab {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .btn-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 24px 60px 24px;
+    }
+
+    /* VIEW SWITCHER */
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO SECTION */
+    .hero-banner {
+      background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.15), transparent 50%),
+                  radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 50%),
+                  #131c31;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 32px 36px;
+      margin-bottom: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #10b981, #6366f1, transparent);
+    }
+
+    .hero-title {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 30%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 13.5px;
+      color: #94a3b8;
+      max-width: 880px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .stat-pill strong {
+      color: #34d399;
+      font-weight: 800;
+    }
+
+    /* FLOW SUB-NAV */
+    .flow-subnav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+    }
+
+    .subnav-btn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .subnav-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+    }
+
+    .subnav-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+
+    /* SECTION CARD WRAPPER */
+    .flow-section-card {
+      background: #131c31;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .flow-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 18px;
+    }
+
+    .flow-header-left h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flow-header-left p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .flow-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .flow-badge.realtime {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .flow-badge.sop {
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .flow-badge.exception {
+      background: rgba(244, 63, 94, 0.15);
+      color: #fda4af;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .flow-badge.user {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* FLOW DIAGRAM 1: REALTIME PIPELINE (HORIZONTAL CARDS) */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+
+    @media (max-width: 1024px) {
+      .pipeline-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pipe-node {
+      background: #17223b;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+
+    .pipe-node:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .node-num {
+      width: 26px;
+      height: 26px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .node-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .node-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .node-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: 'Fira Code', monospace;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    /* CONNECTOR ARROWS */
+    .pipe-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    /* 8 TAHAPAN KPPN INTERACTIVE STEP FLOW */
+    .step-flow-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 1024px) {
+      .step-flow-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .step-flow-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .step-flow-card {
+      background: #18243e;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 18px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 3.5px solid #64748b;
+    }
+
+    .step-flow-card.active-green {
+      border-top-color: #10b981;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08), #18243e 40%);
+    }
+
+    .step-flow-card.active-amber {
+      border-top-color: #f59e0b;
+      background: linear-gradient(180deg, rgba(245, 158, 11, 0.08), #18243e 40%);
+    }
+
+    .step-flow-card.active-rose {
+      border-top-color: #f43f5e;
+      background: linear-gradient(180deg, rgba(244, 63, 94, 0.08), #18243e 40%);
+    }
+
+    .step-flow-card.active-cyan {
+      border-top-color: #06b6d4;
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.08), #18243e 40%);
+    }
+
+    .sfc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sfc-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .sfc-badge.num {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .sfc-eta {
+      font-size: 10.5px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sfc-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .sfc-actor {
+      font-size: 11.5px;
+      color: #34d399;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sfc-desc {
+      font-size: 11.5px;
+      color: #94a3b8;
+      line-height: 1.45;
+      margin-bottom: 12px;
+    }
+
+    .sfc-doc {
+      font-size: 10.5px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    /* DECISION & EXCEPTION BOX (STEP 7 BRANCH) */
+    .decision-banner {
+      background: #152037;
+      border: 1.5px dashed rgba(245, 158, 11, 0.4);
+      border-radius: 18px;
+      padding: 22px 26px;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .decision-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .decision-diamond-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      transform: rotate(45deg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      flex-shrink: 0;
+    }
+
+    .decision-diamond-icon span {
+      transform: rotate(-45deg);
+      font-size: 14px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .decision-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .branches-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .branches-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .branch-card {
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .branch-card.pass {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .branch-card.reject {
+      background: rgba(244, 63, 94, 0.08);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+
+    .branch-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .branch-tag.pass { background: #047857; color: white; }
+    .branch-tag.reject { background: #e11d48; color: white; }
+
+    .branch-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .branch-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* SWIMLANE / ROLE FLOWCHART TABLE */
+    .swimlane-container {
+      background: #17223b;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
+    }
+
+    .swimlane-table {
+      width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    .swimlane-table th {
+      background: #1e2c4a;
+      color: #ffffff;
+      font-weight: 800;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+    }
+
+    .swimlane-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+      color: #cbd5e1;
+    }
+
+    .swimlane-role {
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .action-step-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 8px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin: 4px 4px 4px 0;
+    }
+
+    .action-step-chip.highlight {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    /* SLIDE PRESENTATION VIEW STYLING */
+    .slide-wrapper {
+      background: #141e35;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-header {
+      background: #18233c;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .slide-counter {
+      font-size: 12px;
+      font-weight: 800;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .slide-body {
+      padding: 36px 48px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-title {
+      font-size: 30px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .slide-desc {
+      font-size: 14.5px;
+      color: #94a3b8;
+      margin-bottom: 24px;
+      max-width: 960px;
+      line-height: 1.6;
+    }
+
+    .slide-grid-nodes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .sg-node {
+      background: #1b2744;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 18px;
+    }
+
+    .sg-node h4 {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sg-node p {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .speaker-notes-box {
+      background: rgba(16, 185, 129, 0.07);
+      border-left: 4px solid #10b981;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .speaker-notes-box strong {
+      display: block;
+      font-size: 11px;
+      color: #34d399;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .speaker-notes-box p {
+      font-size: 12.5px;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .slide-footer {
+      background: #18233c;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-slide-nav {
+      padding: 8px 20px;
+      background: #253352;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .btn-slide-nav:hover:not(:disabled) {
+      background: #047857;
+      border-color: #10b981;
+    }
+
+    .btn-slide-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* WORD EXPORT & REPORTING VIEW STYLING */
+    .word-export-panel {
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: 16px;
+      padding: 36px 44px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+
+    .word-copy-banner {
+      background: #ecfdf5;
+      border: 1.5px solid #059669;
+      color: #065f46;
+      padding: 12px 18px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 10pt;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .word-title {
+      font-size: 16pt;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      color: #000000;
+      margin-bottom: 4px;
+    }
+
+    .word-sub {
+      text-align: center;
+      font-size: 11pt;
+      color: #475569;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 8px;
+    }
+
+    .word-h2 {
+      font-size: 13pt;
+      font-weight: bold;
+      color: #000000;
+      text-transform: uppercase;
+      margin: 22px 0 8px 0;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 3px;
+    }
+
+    .word-flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+    }
+
+    .word-flow-table td {
+      border: none;
+      padding: 3px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .word-box {
+      border: 1.5px solid #047857;
+      background: #f8fafc;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    .word-box-highlight {
+      border: 2px solid #047857;
+      background: #ecfdf5;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      text-align: center;
+      color: #064e3b;
+    }
+
+    .word-box-alert {
+      border: 2px solid #e11d48;
+      background: #fff1f2;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      text-align: center;
+      color: #9f1239;
+    }
+
+    .word-flow-title {
+      font-weight: bold;
+      color: #047857;
+      margin-bottom: 2px;
+    }
+
+    .word-flow-desc {
+      font-size: 8.5pt;
+      color: #334155;
+      line-height: 1.35;
+    }
+
+    .word-arrow {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #047857;
+      width: 28px;
+    }
+
+    .word-table-step {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 9.5pt;
+    }
+
+    .word-table-step th {
+      background-color: #047857;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #047857;
+    }
+
+    .word-table-step td {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+      color: #1e293b;
+    }
+
+    .word-table-step tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .top-nav, .nav-controls, .flow-subnav, .btn-slide-nav, .word-copy-banner {
+        display: none !important;
+      }
+      .container {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .view-content {
+        display: block !important;
+      }
+      #view-slides {
+        display: none !important;
+      }
+      .hero-banner, .flow-section-card, .pipe-node, .step-flow-card {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        color: #000000 !important;
+        break-inside: avoid;
+      }
+      .hero-title, .flow-header-left h3, .node-title, .sfc-title {
+        color: #047857 !important;
+        -webkit-text-fill-color: initial !important;
+      }
+      .hero-subtitle, .flow-header-left p, .node-sub, .sfc-desc {
+        color: #334155 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR NAVIGATION -->
+  <header class="top-nav">
+    <div class="brand-group">
+      <div class="logo-badge">📐</div>
+      <div class="brand-text">
+        <h1>SIMANTU <span class="badge-satker">Kejari Soppeng</span></h1>
+        <p>Visualisasi Alur & Diagram Flowchart Sistem Realtime</p>
+      </div>
+    </div>
+    <div class="nav-controls">
+      <button class="btn btn-tab active" id="btn-tab-overview" onclick="switchView('overview')">
+        🗺️ Peta Flowchart Lengkap
+      </button>
+      <button class="btn btn-tab" id="btn-tab-slides" onclick="switchView('slides')">
+        📽️ Mode Presentasi Slide
+      </button>
+      <button class="btn btn-tab" id="btn-tab-word" onclick="switchView('word')">
+        📋 Format Salin ke Word
+      </button>
+      <a href="gambaran-database.html" class="btn btn-tab">
+        🗄️ Skema Database
+      </a>
+      <button class="btn btn-action" onclick="window.print()">
+        🖨️ Cetak / PDF
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+      <h2 class="hero-title">RANCANGAN FLOWCHART & ALUR SISTEM SIMANTU</h2>
+      <p class="hero-subtitle">
+        Pemetaan komprehensif alur operasional 8 tahapan pencairan Tunjangan Kinerja dan Uang Makan, arsitektur sinkronisasi WebSocket realtime Supabase, penanganan berkas ditolak KPPN (exception loop), serta interaksi multi-role antara Pegawai (Publik) dan Bendahara Pengeluaran (Admin).
+      </p>
+      <div class="stats-strip">
+        <div class="stat-pill">
+          <span>📊 Pipeline:</span>
+          <strong>8 Tahapan Standar KPPN</strong>
+        </div>
+        <div class="stat-pill">
+          <span>⚡ Sinkronisasi:</span>
+          <strong>WebSocket Realtime &lt; 300ms</strong>
+        </div>
+        <div class="stat-pill">
+          <span>👥 Aktor Utama:</span>
+          <strong>Pegawai (Publik) &amp; Bendahara (Admin)</strong>
+        </div>
+        <div class="stat-pill">
+          <span>🛡️ Exception Flow:</span>
+          <strong>Revisi SPM &amp; Penolakan KPPN</strong>
+        </div>
+        <div class="stat-pill">
+          <span>💾 Storage Model:</span>
+          <strong>Singleton State + Audit Archive</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: OVERVIEW PETA FLOWCHART LENGKAP -->
+    <!-- ========================================== -->
+    <div id="view-overview" class="view-content active">
+
+      <!-- SUB-NAVIGATION FILTER -->
+      <div class="flow-subnav">
+        <button class="subnav-btn active" onclick="scrollToSection('sec-realtime')">1. Arsitektur &amp; Realtime Data Flow</button>
+        <button class="subnav-btn" onclick="scrollToSection('sec-sop8')">2. Alur 8 Tahapan Pencairan KPPN</button>
+        <button class="subnav-btn" onclick="scrollToSection('sec-exception')">3. Alur Revisi / Berkas Ditolak</button>
+        <button class="subnav-btn" onclick="scrollToSection('sec-user')">4. User Journey Pegawai Publik</button>
+        <button class="subnav-btn" onclick="scrollToSection('sec-admin')">5. Command Center Administrator</button>
+      </div>
+
+      <!-- SECTION 1: ARSITEKTUR & SINKRONISASI REALTIME -->
+      <div class="flow-section-card" id="sec-realtime">
+        <div class="flow-header">
+          <div class="flow-header-left">
+            <h3>🔄 1. Arsitektur Sinkronisasi Realtime End-to-End</h3>
+            <p>Bagaimana instruksi pembaruan bendahara tersiar instan ke layar ponsel seluruh pegawai tanpa perlu refresh browser.</p>
+          </div>
+          <span class="flow-badge realtime">Realtime WebSocket</span>
+        </div>
+
+        <div class="pipeline-grid">
+          <div class="pipe-node">
+            <div class="node-num">1</div>
+            <div class="node-title">Aksi Bendahara</div>
+            <div class="node-sub">Bendahara menekan tombol <strong>"Lanjut Tahap"</strong> atau mengedit pengumuman pada Command Center.</div>
+            <span class="node-tag">/admin / /admin/uang-makan</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num">2</div>
+            <div class="node-title">Kueri PostgreSQL</div>
+            <div class="node-sub">Supabase mengeksekusi perintah <code>UPDATE</code> pada record singleton (id=1) beserta <code>updated_at = now()</code>.</div>
+            <span class="node-tag">status_tukin_global</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num">3</div>
+            <div class="node-title">Change Data Capture (CDC)</div>
+            <div class="node-sub">Supabase Realtime Engine mendeteksi mutasi data baris dan memancarkan payload via <em>WebSocket Channels</em>.</div>
+            <span class="node-tag">postgres_changes (UPDATE)</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num">4</div>
+            <div class="node-title">Client State React 19</div>
+            <div class="node-sub">Perangkat ponsel pegawai menerima payload, memicu re-render reaktif, progress bar naik seketika &lt; 300ms.</div>
+            <span class="node-tag">PWA / Mobile Safari / Chrome</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: 8 TAHAPAN PENCAIRAN STANDAR KPPN -->
+      <div class="flow-section-card" id="sec-sop8">
+        <div class="flow-header">
+          <div class="flow-header-left">
+            <h3>📑 2. Alur Bisnis 8 Tahapan Siklus Pencairan Anggaran</h3>
+            <p>Tahapan standar operasional prosedur penatausahaan keuangan negara dari pengumpulan absensi hingga transfer rekening.</p>
+          </div>
+          <span class="flow-badge sop">Standar KPPN</span>
+        </div>
+
+        <div class="step-flow-grid">
+          <!-- Step 1 -->
+          <div class="step-flow-card active-green">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 01</span>
+                <span class="sfc-eta">⏱️ 1-2 Hari</span>
+              </div>
+              <div class="sfc-title">Rekapitulasi Absensi</div>
+              <div class="sfc-actor">👤 Urusan Kepegawaian</div>
+              <div class="sfc-desc">Penarikan log presensi sidik jari / online pegawai, rekap izin, cuti, serta kalkulasi hari pemotongan.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: Daftar Rekapitulasi Presensi</div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-flow-card active-green">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 02</span>
+                <span class="sfc-eta">⏱️ 1 Hari</span>
+              </div>
+              <div class="sfc-title">Pengesahan Rekap</div>
+              <div class="sfc-actor">✍️ Pimpinan Satker (Kajari / Kasubbag)</div>
+              <div class="sfc-desc">Pemeriksaan hierarki kebenaran daftar kehadiran pegawai dan penandatanganan pengesahan berkas resmi.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: Lembar Pengesahan Absensi Sah</div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-flow-card active-green">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 03</span>
+                <span class="sfc-eta">⏱️ 1 Hari</span>
+              </div>
+              <div class="sfc-title">Hitung Tukin / Uang Makan</div>
+              <div class="sfc-actor">🧮 Bendahara Pengeluaran</div>
+              <div class="sfc-desc">Perhitungan nominal kotor berdasarkan grade jabatan, pemotongan absensi, pajak PPh 21, dan nominal hak bersih.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: Daftar Nominatif Pembayaran</div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-flow-card active-amber">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 04</span>
+                <span class="sfc-eta">⏱️ 1 Hari</span>
+              </div>
+              <div class="sfc-title">Gaji Web KPPN</div>
+              <div class="sfc-actor">💻 Staf Operator Gaji</div>
+              <div class="sfc-desc">Pengunggahan dan sinkronisasi ADK data tagihan pegawai ke portal Gaji Web Kementerian Keuangan.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: ADK Berhasil Terkirim &amp; Teruji</div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="step-flow-card active-amber">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 05</span>
+                <span class="sfc-eta">⏱️ 1 Hari</span>
+              </div>
+              <div class="sfc-title">Validasi SAKTI KPPN</div>
+              <div class="sfc-actor">🔐 Operator SAKTI</div>
+              <div class="sfc-desc">Validasi ketersediaan pagu DIPA pada modul SAKTI, pembuatan resume tagihan, dan pencetakan SPP.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: SPP (Surat Permintaan Pembayaran)</div>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="step-flow-card active-amber">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 06</span>
+                <span class="sfc-eta">⏱️ 1-2 Hari</span>
+              </div>
+              <div class="sfc-title">Pengajuan SPM</div>
+              <div class="sfc-actor">📜 Pejabat PPSPM Kejari Soppeng</div>
+              <div class="sfc-desc">Penerbitan Surat Perintah Membayar (SPM) dengan tandatangan elektronik OTP dan transmisi digital ke KPPN.</div>
+            </div>
+            <div class="sfc-doc">📄 Output: SPM Digital Ber-OTP Terkirim</div>
+          </div>
+
+          <!-- Step 7 -->
+          <div class="step-flow-card active-rose">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num">TAHAP 07</span>
+                <span class="sfc-eta">⏱️ 1-3 Hari</span>
+              </div>
+              <div class="sfc-title">Verifikasi KPPN</div>
+              <div class="sfc-actor">🏛️ Front Office / Seksi Pencairan KPPN</div>
+              <div class="sfc-desc">Pengujian kepatuhan dokumen SPM, validitas rekening pegawai, dan ketersediaan kas negara di perbendaharaan.</div>
+            </div>
+            <div class="sfc-doc">📄 Titik Penentu: Diterima vs Ditolak</div>
+          </div>
+
+          <!-- Step 8 -->
+          <div class="step-flow-card active-cyan">
+            <div>
+              <div class="sfc-header">
+                <span class="sfc-badge num" style="background:#047857;">TAHAP 08</span>
+                <span class="sfc-eta" style="color:#34d399; font-weight:800;">🎉 Selesai!</span>
+              </div>
+              <div class="sfc-title">SP2D Terbit (Cair!)</div>
+              <div class="sfc-actor">💰 KPPN &amp; Bank Persepsi</div>
+              <div class="sfc-desc">KPPN menerbitkan SP2D sah; bank memindahbukukan dana langsung ke rekening masing-masing pegawai.</div>
+            </div>
+            <div class="sfc-doc" style="border-color:#10b981; color:#34d399;">📄 SP2D Sah &amp; Dana Masuk Rekening</div>
+          </div>
+        </div>
+
+        <!-- DECISION DIAMOND: VERIFIKASI KPPN -->
+        <div class="decision-banner" id="sec-exception">
+          <div class="decision-header">
+            <div class="decision-diamond-icon"><span>?</span></div>
+            <div>
+              <div class="decision-title">Titik Keputusan Verifikasi KPPN (Decision Point di Tahap 7)</div>
+              <p style="font-size: 12px; color: #94a3b8;">Apakah dokumen SPM dan rekening pegawai memenuhi syarat kepatuhan perbendaharaan?</p>
+            </div>
+          </div>
+
+          <div class="branches-grid">
+            <!-- JALUR A: MEMENUHI SYARAT -->
+            <div class="branch-card pass">
+              <span class="branch-tag pass">✅ JALUR SUKSES (NORMAL FLOW)</span>
+              <div class="branch-title">SPM Disetujui &amp; Terbit SP2D (Tahap 8)</div>
+              <div class="branch-desc">
+                1. KPPN mengunggah SP2D ke sistem perbendaharaan.<br>
+                2. Bendahara memajukan status ke <strong>Tahap 8 (SP2D Terbit)</strong>.<br>
+                3. Layar ponsel pegawai otomatis menampilkan <strong>hujan selebrasi konfeti</strong> dan banner sukacita.<br>
+                4. Formulir <strong>Rating Evaluasi Kepuasan</strong> (1-5 bintang) terbuka untuk diisi pegawai secara anonim.<br>
+                5. Pada pergantian periode, bendahara menekan <strong>"Arsip &amp; Reset"</strong>: data periode disalin ke tabel <code>arsip_pencairan</code> dan sistem siap untuk bulan baru.
+              </div>
+            </div>
+
+            <!-- JALUR B: REVISI / DITOLAK -->
+            <div class="branch-card reject">
+              <span class="branch-tag reject">⚠️ JALUR PENGECUALIAN (EXCEPTION FLOW)</span>
+              <div class="branch-title">SPM Ditolak KPPN / Perbaikan Berkas</div>
+              <div class="branch-desc">
+                1. KPPN menerbitkan catatan koreksi atau penolakan SPM karena kendala data/format.<br>
+                2. Bendahara menekan tombol <strong>"Tandai Berkas Ditolak / Perbaikan"</strong> di dashboard.<br>
+                3. Sistem otomatis menyetel: <code>current_step = 6</code> dan <code>is_rejected = true</code>.<br>
+                4. Layar seluruh pegawai seketika berubah warna <strong>merah peringatan</strong> dengan catatan transparan perbaikan dokumen.<br>
+                5. Operator memperbaiki data tagihan, menerbitkan SPM revisi, dan mengajukan ulang ke KPPN (kembali ke Tahap 7, flag <code>is_rejected</code> pulih menjadi <code>false</code>).
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: USER JOURNEY PEGAWAI PUBLIK -->
+      <div class="flow-section-card" id="sec-user">
+        <div class="flow-header">
+          <div class="flow-header-left">
+            <h3>📱 3. User Journey: Alur Pengalaman Pegawai (Publik)</h3>
+            <p>Langkah interaksi pegawai dari membuka aplikasi, membaca indikator, memeriksa riwayat, hingga memberi ulasan.</p>
+          </div>
+          <span class="flow-badge user">Pegawai ASN / PPNPN</span>
+        </div>
+
+        <div class="swimlane-container">
+          <table class="swimlane-table">
+            <thead>
+              <tr>
+                <th style="width: 20%;">Aktivitas Pengguna</th>
+                <th style="width: 40%;">Tampilan Antarmuka (UI Reaction)</th>
+                <th style="width: 40%;">Dukungan Sistem &amp; Database</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">1</div>
+                    Buka Aplikasi SIMANTU
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip">Akses Web / PWA Icon</span>
+                  <span class="action-step-chip highlight">Badge "Live Realtime" Hijau Berkedip</span>
+                  <p style="font-size:11.5px; color:#94a3b8; margin-top:4px;">Layar langsung menyajikan data tanpa login (Public Open Access).</p>
+                </td>
+                <td>
+                  <span class="action-step-chip">Subscription WebSocket Supabase</span>
+                  <span class="action-step-chip">Deteksi Online / Offline Listener</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">2</div>
+                    Pilih Layanan Hak Keuangan
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip">Tombol Switcher: Tunjangan Kinerja (Hijau)</span>
+                  <span class="action-step-chip">Tombol Switcher: Uang Makan (Kuning)</span>
+                </td>
+                <td>
+                  Membaca entitas singleton: <code>status_tukin_global</code> atau <code>status_uang_makan_global</code>.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">3</div>
+                    Pantau Progres &amp; Catatan
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip">Kartu Status Utama &amp; Progress Bar (0-100%)</span>
+                  <span class="action-step-chip">Papan Pengumuman Lonceng Bergerak</span>
+                  <span class="action-step-chip">Estimasi Durasi Penyelesaian</span>
+                </td>
+                <td>
+                  Data diikat secara <em>two-way reactive</em> melalui state hook React.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">4</div>
+                    Cek Riwayat Pencairan
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip">Klik Tombol "Riwayat"</span>
+                  <span class="action-step-chip">Modal Arsip Bulan Lampau Terbuka</span>
+                </td>
+                <td>
+                  Kueri <code>SELECT * FROM arsip_pencairan ORDER BY tanggal_cair DESC</code>.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">5</div>
+                    Evaluasi Rating (Saat Step 8)
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip highlight">Banner Selebrasi Confetti</span>
+                  <span class="action-step-chip">Pilih Bintang 1 s/d 5 (Hover Interaktif)</span>
+                  <span class="action-step-chip">Feedback Label Dinamis</span>
+                </td>
+                <td>
+                  Kueri <code>INSERT INTO rating_kepuasan (periode, jenis, rating)</code> tersimpan aman.
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="swimlane-role">
+                    <div class="role-circle" style="background:#047857; color:white;">6</div>
+                    Pusat Bantuan Cepat
+                  </div>
+                </td>
+                <td>
+                  <span class="action-step-chip">Tombol Floating "Bantuan" (?)</span>
+                  <span class="action-step-chip">Klik "Chat Tim Bendahara"</span>
+                </td>
+                <td>
+                  Membuka WhatsApp API (<code>wa.me/628...</code>) dengan draf pesan otomatis.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECTION 4: COMMAND CENTER ADMINISTRATOR -->
+      <div class="flow-section-card" id="sec-admin">
+        <div class="flow-header">
+          <div class="flow-header-left">
+            <h3>🔐 4. Alur Kerja Command Center Administrator (Bendahara)</h3>
+            <p>Otoritas pengelolaan status, pengendalian siklus, penanganan kendala berkas, dan pengarsipan bulanan.</p>
+          </div>
+          <span class="flow-badge sop">Bendahara Pengeluaran</span>
+        </div>
+
+        <div class="pipeline-grid">
+          <div class="pipe-node">
+            <div class="node-num" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border-color:rgba(99,102,241,0.4);">A</div>
+            <div class="node-title">Login Autentikasi</div>
+            <div class="node-sub">Bendahara memasukkan kredensial resmi pada rute rahasia <code>/admin/login</code> via Supabase Auth.</div>
+            <span class="node-tag">JWT Session Cookie</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border-color:rgba(99,102,241,0.4);">B</div>
+            <div class="node-title">Kontrol Tahapan</div>
+            <div class="node-sub">Tindakan memajukan tahapan (Advance +1) atau memundurkan tahapan (Rollback -1) dengan 1 klik.</div>
+            <span class="node-tag">current_step update</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border-color:rgba(99,102,241,0.4);">C</div>
+            <div class="node-title">Update Teks &amp; Estimasi</div>
+            <div class="node-sub">Mengisi periode (contoh: "Oktober 2026"), estimasi durasi, dan catatan penting untuk dibaca publik.</div>
+            <span class="node-tag">catatan / estimasi</span>
+          </div>
+
+          <div class="pipe-node">
+            <div class="node-num" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border-color:rgba(99,102,241,0.4);">D</div>
+            <div class="node-title">Arsip &amp; Reset Siklus</div>
+            <div class="node-sub">Setelah SP2D cair, salin periode ke tabel arsip historis dan reset status kembali ke Tahap 1 untuk bulan baru.</div>
+            <span class="node-tag">arsip_pencairan</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: MODE PRESENTASI SLIDE (PIMPINAN) -->
+    <!-- ========================================== -->
+    <div id="view-slides" class="view-content">
+      <div class="slide-wrapper">
+        <div class="slide-header">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:18px;">📽️</span>
+            <strong style="color:#ffffff; font-size:13px;">PAPARAN EKSEKUTIF ALUR SISTEM SIMANTU</strong>
+          </div>
+          <span class="slide-counter" id="slide-indicator">Slide 1 dari 6</span>
+        </div>
+
+        <div class="slide-body" id="slide-container">
+          <!-- Slide contents will be dynamically rendered via JavaScript -->
+        </div>
+
+        <div class="slide-footer">
+          <div style="font-size:11px; color:#64748b;">
+            💡 Gunakan tombol navigasi atau tombol keyboard panah <strong>&larr; / &rarr;</strong>
+          </div>
+          <div class="nav-buttons" style="display:flex; gap:10px;">
+            <button class="btn-slide-nav" id="btn-prev-slide" onclick="prevSlide()" disabled>&larr; Sebelumnya</button>
+            <button class="btn-slide-nav" id="btn-next-slide" onclick="nextSlide()">Selanjutnya &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: FORMAT SALIN KE MICROSOFT WORD -->
+    <!-- ========================================== -->
+    <div id="view-word" class="view-content">
+      <div class="word-export-panel">
+        
+        <div class="word-copy-banner">
+          <div>
+            <strong>📋 Petunjuk Praktis Menyalin ke Microsoft Word:</strong><br>
+            Blok seluruh isi di bawah ini (atau tekan <strong>Ctrl + A</strong>), lalu <strong>Ctrl + C</strong>, dan buka dokumen Microsoft Word Anda lalu tekan <strong>Ctrl + V</strong>. Seluruh bagan kotak dan tabel otomatis tertempel rapi sesuai standar format laporan dinas.
+          </div>
+          <button class="btn btn-action" onclick="copyWordContent()" style="padding:6px 14px; font-size:11px;">
+            Salin Teks Laporan
+          </button>
+        </div>
+
+        <div id="word-selectable-content">
+          <div class="word-title">RANCANGAN DIAGRAM ALUR SISTEM (FLOWCHART SYSTEM)</div>
+          <div class="word-sub">Sistem Informasi Monitoring Tunjangan Kinerja &amp; Uang Makan (SIMANTU) - Kejaksaan Negeri Soppeng</div>
+
+          <div class="word-h2">I. DIAGRAM ALUR ARSITEKTUR SINKRONISASI REALTIME</div>
+          <p style="text-align: justify; margin-bottom: 8px;">
+            Sistem mengadopsi model transmisi data reaktif berbasis WebSockets. Perubahan status oleh bendahara langsung tersinkronisasi ke seluruh gawai pegawai dalam hitungan milidetik:
+          </p>
+
+          <table class="word-flow-table">
+            <tr>
+              <td style="width: 22%;">
+                <div class="word-box">
+                  <div class="word-flow-title">[1] AKSI BENDAHARA</div>
+                  <div class="word-flow-desc">Login &amp; klik <strong>Lanjut Tahap</strong> di Command Center</div>
+                </div>
+              </td>
+              <td class="word-arrow">➔</td>
+              <td style="width: 24%;">
+                <div class="word-box">
+                  <div class="word-flow-title">[2] POSTGRES UPDATE</div>
+                  <div class="word-flow-desc">Kueri UPDATE <code>current_step</code> dieksekusi di tabel</div>
+                </div>
+              </td>
+              <td class="word-arrow">➔</td>
+              <td style="width: 24%;">
+                <div class="word-box-highlight">
+                  <div class="word-flow-title">[3] REALTIME CDC</div>
+                  <div class="word-flow-desc">Supabase memancarkan event via <em>WebSocket Channel</em></div>
+                </div>
+              </td>
+              <td class="word-arrow">➔</td>
+              <td style="width: 24%;">
+                <div class="word-box">
+                  <div class="word-flow-title">[4] LAYAR PEGAWAI</div>
+                  <div class="word-flow-desc">Progres berubah instan tanpa perlu memuat ulang halaman</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <div class="word-h2">II. MATRIKS 8 TAHAPAN STANDAR OPERASIONAL PROSEDUR (SOP) PENCAIRAN</div>
+          <table class="word-table-step">
+            <thead>
+              <tr>
+                <th style="width: 8%; text-align: center;">Tahap</th>
+                <th style="width: 22%;">Nama Tahapan</th>
+                <th style="width: 22%;">Pelaksana / PIC</th>
+                <th style="width: 48%;">Uraian Kerja &amp; Dokumen Output</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">01</td>
+                <td><strong>Rekapitulasi Absensi</strong></td>
+                <td>Staf Kepegawaian</td>
+                <td>Mengunduh dan merekap presensi online; menghitung potongan kehadiran. Output: <em>Daftar Rekap Absensi</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">02</td>
+                <td><strong>Pengesahan Rekap</strong></td>
+                <td>Pimpinan Satker</td>
+                <td>Verifikasi keabsahan daftar hadir dan penandatanganan pengesahan. Output: <em>Rekapitulasi Sah</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">03</td>
+                <td><strong>Hitung Tukin / Uang Makan</strong></td>
+                <td>Bendahara Pengeluaran</td>
+                <td>Penghitungan nominal kotor, potongan PPh/BPJS, dan nominal hak bersih. Output: <em>Daftar Nominatif</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">04</td>
+                <td><strong>Gaji Web KPPN</strong></td>
+                <td>Operator Gaji Web</td>
+                <td>Mengunggah dan menyinkronkan berkas nominatif ke portal Gaji Web Kemenkeu. Output: <em>ADK Teruji</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">05</td>
+                <td><strong>Validasi SAKTI</strong></td>
+                <td>Operator SAKTI</td>
+                <td>Pengecekan pagu belanja pegawai pada DIPA dan penerbitan SPP. Output: <em>Surat Permintaan Pembayaran</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">06</td>
+                <td><strong>Pengajuan SPM</strong></td>
+                <td>Pejabat PPSPM Kejari</td>
+                <td>Persetujuan dan penerbitan SPM elektronik menggunakan OTP digital. Output: <em>SPM Elektronik Terkirim</em>.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold;">07</td>
+                <td><strong>Verifikasi KPPN</strong></td>
+                <td>Front Office KPPN</td>
+                <td>Pengujian dokumen tagihan oleh KPPN. Titik penentu kelulusan atau perbaikan berkas.</td>
+              </tr>
+              <tr>
+                <td style="text-align: center; font-weight: bold; background:#ecfdf5; color:#047857;">08</td>
+                <td><strong style="color:#047857;">SP2D Terbit (Cair!)</strong></td>
+                <td>KPPN &amp; Bank Persepsi</td>
+                <td>Surat Perintah Pencairan Dana terbit sah; dana ditransfer langsung ke rekening masing-masing pegawai.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="word-h2">III. DIAGRAM ALUR PENANGANAN BERKAS DITOLAK / REVISI KPPN</div>
+          <table class="word-flow-table">
+            <tr>
+              <td style="width: 30%;">
+                <div class="word-box-alert">
+                  <div class="word-flow-title" style="color:#e11d48;">[1] KENDALA VERIFIKASI</div>
+                  <div class="word-flow-desc">KPPN menerbitkan penolakan / instruksi revisi pada Tahap 7</div>
+                </div>
+              </td>
+              <td class="word-arrow" style="color:#e11d48;">➔</td>
+              <td style="width: 35%;">
+                <div class="word-box-alert">
+                  <div class="word-flow-title" style="color:#e11d48;">[2] STATUS REVISI AKTIF</div>
+                  <div class="word-flow-desc">Bendahara klik <strong>Tolak &amp; Revisi</strong> (Step disetel ke 6 &amp; <code>is_rejected=true</code>)</div>
+                </div>
+              </td>
+              <td class="word-arrow" style="color:#e11d48;">➔</td>
+              <td style="width: 35%;">
+                <div class="word-box">
+                  <div class="word-flow-title">[3] PENGAJUAN ULANG</div>
+                  <div class="word-flow-desc">Berkas diperbaiki, diajukan kembali ke KPPN (kembali ke Tahap 7, status normal)</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <div class="word-h2">IV. DIAGRAM SIKLUS PENUTUPAN &amp; ARSIP OTOMATIS</div>
+          <p style="text-align: justify;">
+            Saat pencairan selesai (Tahap 8), sistem mengaktifkan selebrasi dan membuka formulir umpan balik kepuasan bagi pegawai. Ketika menyambut periode anggaran bulan baru, Bendahara menekan tombol <strong>"Arsipkan &amp; Reset"</strong> yang mengeksekusi penyalinan rekaman ke tabel <code>arsip_pencairan</code>, kemudian mereset tahapan operasional kembali ke Tahap 1.
+          </p>
+
+          <div style="margin-top: 25px; text-align: right; font-size: 10pt;">
+            <div>Watansoppeng, 2026</div>
+            <div style="font-weight: bold; margin-top: 4px;">Penyusun / Pranata Komputer,</div>
+            <div style="height: 55px;"></div>
+            <div style="font-weight: bold; text-decoration: underline;">DEWA SURYA, A.Md.Kom.</div>
+            <div style="font-size: 8.5pt; color: #475569;">Kejaksaan Negeri Soppeng</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // Tab switching
+    function switchView(viewName) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
+
+      const targetView = document.getElementById('view-' + viewName);
+      const targetBtn = document.getElementById('btn-tab-' + viewName);
+
+      if (targetView) targetView.classList.add('active');
+      if (targetBtn) targetBtn.classList.add('active');
+
+      if (viewName === 'slides') {
+        renderSlide();
+      }
+    }
+
+    function scrollToSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('.subnav-btn').forEach(btn => btn.classList.remove('active'));
+        if (event && event.target) {
+          event.target.classList.add('active');
+        }
+      }
+    }
+
+    // Presentation Slide Data
+    const SLIDES_DATA = [
+      {
+        title: "Arsitektur Sinkronisasi WebSocket Realtime",
+        desc: "Mekanisme pengiriman data berkecepatan tinggi dari Bendahara Pengeluaran ke seluruh gawai pegawai Kejaksaan Negeri Soppeng tanpa perlu memuat ulang peramban.",
+        nodes: [
+          { title: "Command Center Admin", desc: "Bendahara menekan tombol pembaruan status pada antarmuka admin yang dilindungi Supabase Auth." },
+          { title: "PostgreSQL Mutasi", desc: "Data pada tabel singleton status_tukin_global diperbarui seketika beserta audit timestamp." },
+          { title: "Realtime Engine CDC", desc: "Fitur Change Data Capture memancarkan event perubahan ke WebSocket channel terdaftar." },
+          { title: "Layar Ponsel Pegawai", desc: "Aplikasi PWA di ponsel pegawai menerima payload & merefleksikan progress bar dalam < 300ms." }
+        ],
+        speakerNotes: "Titik berat arsitektur ini adalah efisiensi komunikasi. Staf keuangan tidak lagi perlu menjawab panggilan telepon konfirmasi berulang kali karena setiap perpindahan berkas terpampang secara langsung dan transparan."
+      },
+      {
+        title: "Siklus 8 Tahapan Pencairan Standar KPPN",
+        desc: "Rangkaian perjalanan dokumen administrasi belanja pegawai yang telah dibakukan menjadi alur digital terpadu pada aplikasi SIMANTU.",
+        nodes: [
+          { title: "Tahap 1 & 2: Absensi & Pengesahan", desc: "Pengumpulan log kehadiran pegawai oleh Urusan Kepegawaian dan penandatanganan pimpinan." },
+          { title: "Tahap 3 & 4: Hitung & Gaji Web", desc: "Penghitungan nominal bersih oleh Bendahara dan sinkronisasi ADK ke portal Gaji Web Kemenkeu." },
+          { title: "Tahap 5 & 6: SAKTI & SPM", desc: "Validasi pagu anggaran belanja pegawai, pembuatan SPP, dan penerbitan SPM ber-OTP." },
+          { title: "Tahap 7 & 8: KPPN & SP2D Cair", desc: "Pengujian kepatuhan dokumen di KPPN hingga penerbitan SP2D transfer ke rekening pegawai." }
+        ],
+        speakerNotes: "Alur 8 tahapan ini selaras 100% dengan Standar Operasional Prosedur (SOP) perbendaharaan negara, memberikan kepastian posisi berkas secara akurat kepada setiap pegawai."
+      },
+      {
+        title: "Alur Penanganan Berkas Ditolak / Revisi KPPN",
+        desc: "Mekanisme penanganan anomali (exception loop) apabila berkas SPM mengalami kendala verifikasi atau penolakan administrasi di KPPN.",
+        nodes: [
+          { title: "Deteksi Kendala KPPN", desc: "KPPN menerbitkan catatan koreksi atau penolakan pengajuan SPM pada Tahap 7." },
+          { title: "Aksi Bendahara: Tolak & Revisi", desc: "Bendahara menekan tombol 'Tandai Berkas Ditolak', menyetel current_step = 6 & is_rejected = true." },
+          { title: "Transparansi ke Pegawai", desc: "Tampilan aplikasi pegawai otomatis berubah merah dengan peringatan berkas sedang dalam perbaikan." },
+          { title: "Pengajuan Ulang SPM", desc: "Setelah perbaikan selesai, bendahara memajukan kembali ke Tahap 7 dan status merah kembali normal." }
+        ],
+        speakerNotes: "Fitur penandaan revisi ini sangat penting untuk transparansi. Pegawai langsung memahami alasan keterlambatan jika ada dokumen yang perlu dikoreksi, mencegah timbulnya prasangka keliru."
+      },
+      {
+        title: "Pengalaman Pengguna Pegawai (User Journey)",
+        desc: "Kemudahan akses tanpa hambatan bagi seluruh aparatur sipil negara dan PPNPN pada Kejaksaan Negeri Soppeng.",
+        nodes: [
+          { title: "Zero Login Barrier", desc: "Pegawai dapat langsung melihat status tanpa perlu mengingat username/password akun." },
+          { title: "PWA Cross-Platform", desc: "Dapat diinstal langsung ke homescreen iPhone (Safari) maupun Android (Chrome) selayaknya aplikasi natif." },
+          { title: "Switcher Tukin & Uang Makan", desc: "Beralih pemantauan antara Tunjangan Kinerja dan Uang Makan dengan 1 kali ketukan." },
+          { title: "Pusat Bantuan WhatsApp", desc: "Integrasi chat langsung ke nomor resmi Bendahara dengan template draf pesan otomatis." }
+        ],
+        speakerNotes: "Desain aplikasi dirancang dengan pendekatan human-centered dan mobile-first, sehingga dapat digunakan dengan mudah bahkan oleh pegawai yang kurang terbiasa dengan teknologi rumit."
+      },
+      {
+        title: "Panel Kendali Administrator (Command Center)",
+        desc: "Pusat kendali operasional bagi Bendahara Pengeluaran dalam mengelola status dan transparansi informasi keuangan.",
+        nodes: [
+          { title: "Pengendali Maju-Mundur", desc: "Fleksibilitas memajukan tahapan (advance) atau memundurkan tahapan (rollback) jika terjadi koreksi." },
+          { title: "Papan Pengumuman Khusus", desc: "Media publikasi catatan penting bendahara yang langsung menyala di ponsel pegawai." },
+          { title: "Estimasi Waktu Adaptif", desc: "Memberikan perkiraan waktu penyelesaian terukur untuk menjaga ekspektasi pegawai." },
+          { title: "Pemantauan Rating Kepuasan", desc: "Menampilkan skor rata-rata indeks kepuasan aparatur terhadap kinerja pencairan anggaran." }
+        ],
+        speakerNotes: "Panel admin didesain dengan kontrol yang intuitif dan aman, dilengkapi konfirmasi tindakan penting agar tidak terjadi kekeliruan pembaruan data secara tidak sengaja."
+      },
+      {
+        title: "Siklus Pengarsipan Otomatis & Periode Baru",
+        desc: "Proses penutupan periode pencairan yang sukses dan pemulihan sistem untuk menyambut siklus kerja bulan berikutnya.",
+        nodes: [
+          { title: "Selebrasi SP2D Terbit", desc: "Layar pegawai memicu animasi konfeti dan membuka akses formulir rating survei kepuasan 1-5 bintang." },
+          { title: "Perekaman Arsip Otomatis", desc: "Tindakan 'Arsipkan & Reset' menyalin periode dan tanggal cair resmi ke tabel arsip_pencairan." },
+          { title: "Reset Status Operasional", desc: "Tabel status_tukin_global direset kembali ke Tahap 1, estimasi awal, dan catatan dibersihkan." },
+          { title: "Aksesibilitas Riwayat Publik", desc: "Pegawai tetap dapat melihat kembali jejak riwayat pencairan bulan-bulan sebelumnya via tombol Riwayat." }
+        ],
+        speakerNotes: "Siklus pengarsipan memastikan jejak rekam administrasi (audit trail) tersimpan rapi dan permanen, mendukung kebutuhan pemeriksaan berkas dan akuntabilitas keuangan satker."
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide() {
+      const container = document.getElementById('slide-container');
+      const indicator = document.getElementById('slide-indicator');
+      const prevBtn = document.getElementById('btn-prev-slide');
+      const nextBtn = document.getElementById('btn-next-slide');
+
+      const data = SLIDES_DATA[currentSlide];
+
+      indicator.textContent = `Slide ${currentSlide + 1} dari ${SLIDES_DATA.length}`;
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === SLIDES_DATA.length - 1;
+
+      let nodesHtml = data.nodes.map(n => `
+        <div class="sg-node">
+          <h4>📌 ${n.title}</h4>
+          <p>${n.desc}</p>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div style="animation: fadeIn 0.3s ease;">
+          <h3 class="slide-title">${data.title}</h3>
+          <p class="slide-desc">${data.desc}</p>
+          <div class="slide-grid-nodes">${nodesHtml}</div>
+          <div class="speaker-notes-box">
+            <strong>Catatan Presenter / Penjelasan Teknis:</strong>
+            <p>${data.speakerNotes}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < SLIDES_DATA.length - 1) {
+        currentSlide++;
+        renderSlide();
+      }
+    }
+
+    // Keyboard navigation for slides
+    document.addEventListener('keydown', (e) => {
+      const slidesView = document.getElementById('view-slides');
+      if (slidesView && slidesView.classList.contains('active')) {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+          prevSlide();
+        }
+      }
+    });
+
+    // Copy Word Content Helper
+    function copyWordContent() {
+      const content = document.getElementById('word-selectable-content');
+      if (!content) return;
+
+      const range = document.createRange();
+      range.selectNode(content);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+
+      try {
+        document.execCommand('copy');
+        alert('✅ Isi dokumen berhasil disalin! Silakan buka Microsoft Word dan tekan tombol Ctrl + V.');
+      } catch (err) {
+        alert('Silakan tekan Ctrl + C manual pada area yang telah disorot.');
+      }
+    }
+  </script>
+</body>
+</html>

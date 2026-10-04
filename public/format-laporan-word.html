@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dokumen Lengkap Perancangan Basis Data & Alur Sistem SIMANTU (Untuk Word)</title>
+  <style>
+    body {
+      font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: #000000;
+      background: #ffffff;
+      padding: 30px 40px;
+      max-width: 880px;
+      margin: 0 auto;
+    }
+
+    .tip-box {
+      background: #ecfdf5;
+      border: 1px solid #059669;
+      color: #065f46;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin-bottom: 24px;
+      font-size: 10pt;
+    }
+
+    h1.doc-title {
+      font-size: 16pt;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: #000000;
+    }
+
+    .doc-subtitle {
+      text-align: center;
+      font-size: 11pt;
+      color: #475569;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 13pt;
+      font-weight: bold;
+      color: #000000;
+      text-transform: uppercase;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 3px;
+    }
+
+    h3 {
+      font-size: 11.5pt;
+      font-weight: bold;
+      color: #047857;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 8px;
+    }
+
+    ul, ol {
+      margin: 4px 0 10px 24px;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    /* FLOW CHART BOX UNTUK WORD */
+    table.flow-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px 0;
+    }
+
+    table.flow-table td {
+      border: none;
+      padding: 3px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .flow-box {
+      border: 1.5px solid #047857;
+      background: #f8fafc;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      text-align: center;
+    }
+
+    .flow-box-highlight {
+      border: 2px solid #047857;
+      background: #ecfdf5;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 9.5pt;
+      text-align: center;
+    }
+
+    .flow-title {
+      font-weight: bold;
+      color: #047857;
+      margin-bottom: 2px;
+    }
+
+    .flow-desc {
+      font-size: 8.5pt;
+      color: #334155;
+      line-height: 1.3;
+    }
+
+    .flow-arrow {
+      font-size: 14pt;
+      font-weight: bold;
+      color: #047857;
+      width: 30px;
+    }
+
+    /* STEP PIPELINE TABLE */
+    table.step-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+      font-size: 9.5pt;
+    }
+
+    table.step-table th {
+      background-color: #047857;
+      color: #ffffff;
+      font-weight: bold;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #047857;
+    }
+
+    table.step-table td {
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+      vertical-align: top;
+    }
+
+    table.step-table tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+
+    /* DATA DICTIONARY TABLE */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 16px 0;
+      font-size: 9.5pt;
+    }
+
+    table.data-table th {
+      background-color: #f1f5f9;
+      color: #000000;
+      font-weight: bold;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #000000;
+    }
+
+    table.data-table td {
+      padding: 5px 8px;
+      border: 1px solid #000000;
+      vertical-align: top;
+    }
+
+    .pk-text {
+      font-weight: bold;
+      color: #b45309;
+    }
+
+    /* CODE SQL */
+    pre {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 9pt;
+      overflow-x: auto;
+      margin: 10px 0 16px 0;
+      line-height: 1.4;
+    }
+
+    /* FLOW STEP LIST */
+    .flow-step-box {
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      border-left: 4px solid #047857;
+    }
+
+    .flow-step-num {
+      font-weight: bold;
+      color: #047857;
+      font-size: 10.5pt;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="tip-box">
+    <strong>📋 Panduan Mudah Menyalin ke Microsoft Word:</strong><br>
+    1. Tekan tombol <strong>Ctrl + A</strong> pada halaman ini untuk memilih seluruh isi dokumen.<br>
+    2. Tekan <strong>Ctrl + C</strong> untuk menyalin.<br>
+    3. Buka Microsoft Word, lalu tekan <strong>Ctrl + V</strong> (Tempel). Seluruh format teks, bagan kotak, dan tabel kamus data otomatis menjadi tabel asli Microsoft Word yang rapi dan dapat diedit.
+  </div>
+
+  <h1 class="doc-title">PERANCANGAN BASIS DATA & ALUR SISTEM (DATA FLOW)</h1>
+  <div class="doc-subtitle">Sistem Informasi Monitoring Tunjangan Kinerja & Uang Makan (SIMANTU) - Kejaksaan Negeri Soppeng</div>
+
+  <h2>I. ARSITEKTUR STRUKTUR BASIS DATA</h2>
+  <p>
+    Basis data SIMANTU dibangun di atas sistem manajemen basis data relasional <strong>PostgreSQL</strong> yang di-<em>host</em> secara <em>cloud</em> pada platform <strong>Supabase</strong>. Arsitektur data mengadopsi prinsip <em>Single-State Synchronization</em> dan <em>Audit Trail Logging</em>, di mana status tahapan terkini dikelola melalui entitas tunggal (*singleton*) untuk memaksimalkan performa pembacaan data, sementara riwayat historis dicatat pada entitas arsip terpisah.
+  </p>
+
+  <h3>A. Diagram Konseptual Relasi Entitas (ERD)</h3>
+  <table class="flow-table">
+    <tr>
+      <td style="width: 48%;">
+        <div class="flow-box-highlight">
+          <div class="flow-title">TABEL OPERASIONAL REALTIME (SINGLETON)</div>
+          <div class="flow-desc" style="text-align: left; margin-top: 6px;">
+            • <strong>status_tukin_global</strong> (id = 1, periode, current_step, estimasi, catatan, is_rejected, updated_at)<br>
+            • <strong>status_uang_makan_global</strong> (id = 1, periode, current_step, estimasi, catatan, is_rejected, updated_at)
+          </div>
+        </div>
+      </td>
+      <td class="flow-arrow" style="width: 4%;">⬌</td>
+      <td style="width: 48%;">
+        <div class="flow-box">
+          <div class="flow-title">TABEL HISTORIS & EVALUASI</div>
+          <div class="flow-desc" style="text-align: left; margin-top: 6px;">
+            • <strong>arsip_pencairan</strong> (id, periode, jenis, tanggal_cair)<br>
+            • <strong>rating_kepuasan</strong> (id, periode, jenis, rating, created_at)<br>
+            • <strong>auth.users</strong> (id, email, encrypted_password)
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <p style="font-size: 9.5pt; color: #475569; font-style: italic;">
+    *Catatan Relasi: Saat proses mencapai Tahap 8 (SP2D Terbit) dan direset untuk bulan baru, data periode disalin dari status operasional ke <strong>arsip_pencairan</strong>. Respon survei kepuasan pegawai ditampung ke <strong>rating_kepuasan</strong> berdasar atribut periode dan jenis hak keuangan.
+  </p>
+
+  <h2>II. SPESIFIKASI DAN STRUKTUR TABEL BASIS DATA (KAMUS DATA)</h2>
+
+  <h3>1. Tabel: <code>status_tukin_global</code></h3>
+  <p>Menyimpan data pelacakan tahapan aktif pencairan Tunjangan Kinerja (Tukin) yang sedang berjalan saat ini.</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">No</th>
+        <th style="width: 22%;">Nama Kolom</th>
+        <th style="width: 15%;">Tipe Data</th>
+        <th style="width: 16%;">Kunci / Index</th>
+        <th style="width: 42%;">Fungsi & Aturan Bisnis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>id</strong></td>
+        <td>BIGINT</td>
+        <td><span class="pk-text">PRIMARY KEY</span></td>
+        <td>Record tunggal konstan bernilai 1 (Singleton pattern).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>periode</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Nama bulan & tahun pencairan (contoh: "April 2026").</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>current_step</strong></td>
+        <td>INTEGER</td>
+        <td>-</td>
+        <td>Posisi tahapan aktif (rentang nilai integer 1 s/d 8).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>estimasi</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Estimasi waktu penyelesaian (contoh: "1-2 Hari Kerja").</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><strong>catatan</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Papan pengumuman bendahara atau instruksi berkas.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td><strong>is_rejected</strong></td>
+        <td>BOOLEAN</td>
+        <td>-</td>
+        <td>Penanda berkas ditolak KPPN (True = Ditolak / Perbaikan).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">7</td>
+        <td><strong>updated_at</strong></td>
+        <td>TIMESTAMPTZ</td>
+        <td>-</td>
+        <td>Waktu dan tanggal pembaruan data terakhir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>2. Tabel: <code>status_uang_makan_global</code></h3>
+  <p>Menyimpan data pelacakan tahapan aktif pencairan Uang Makan bulanan pegawai.</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">No</th>
+        <th style="width: 22%;">Nama Kolom</th>
+        <th style="width: 15%;">Tipe Data</th>
+        <th style="width: 16%;">Kunci / Index</th>
+        <th style="width: 42%;">Fungsi & Aturan Bisnis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>id</strong></td>
+        <td>BIGINT</td>
+        <td><span class="pk-text">PRIMARY KEY</span></td>
+        <td>Record tunggal konstan bernilai 1 (Singleton pattern).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>periode</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Nama bulan uang makan (contoh: "Maret 2026").</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>current_step</strong></td>
+        <td>INTEGER</td>
+        <td>-</td>
+        <td>Posisi tahapan aktif berjalan (nilai 1 s/d 8).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>estimasi</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Target durasi tahapan berjalan.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><strong>catatan</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Pengumuman atau informasi resmi dari bendahara.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">6</td>
+        <td><strong>is_rejected</strong></td>
+        <td>BOOLEAN</td>
+        <td>-</td>
+        <td>Status penolakan berkas KPPN (True = Perbaikan).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">7</td>
+        <td><strong>updated_at</strong></td>
+        <td>TIMESTAMPTZ</td>
+        <td>-</td>
+        <td>Waktu pembaruan data sinkronisasi terakhir.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3. Tabel: <code>arsip_pencairan</code></h3>
+  <p>Menyimpan catatan rekam jejak historis periode anggaran yang telah sukses diterbitkan SP2D-nya.</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">No</th>
+        <th style="width: 22%;">Nama Kolom</th>
+        <th style="width: 15%;">Tipe Data</th>
+        <th style="width: 16%;">Kunci / Index</th>
+        <th style="width: 42%;">Fungsi & Aturan Bisnis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>id</strong></td>
+        <td>BIGSERIAL</td>
+        <td><span class="pk-text">PRIMARY KEY</span></td>
+        <td>ID unik riwayat auto-increment.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>periode</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Bulan/Tahun yang telah tuntas terbit SP2D.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>jenis</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Kategori hak keuangan: 'Tukin' atau 'Uang Makan'.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>tanggal_cair</strong></td>
+        <td>TIMESTAMPTZ</td>
+        <td>-</td>
+        <td>Waktu resmi pencairan/arsip dibukukan (default now()).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>4. Tabel: <code>rating_kepuasan</code></h3>
+  <p>Menampung data hasil survei evaluasi indeks kepuasan pegawai secara mandiri dan anonim.</p>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width: 5%; text-align: center;">No</th>
+        <th style="width: 22%;">Nama Kolom</th>
+        <th style="width: 15%;">Tipe Data</th>
+        <th style="width: 16%;">Kunci / Index</th>
+        <th style="width: 42%;">Fungsi & Aturan Bisnis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center;">1</td>
+        <td><strong>id</strong></td>
+        <td>BIGSERIAL</td>
+        <td><span class="pk-text">PRIMARY KEY</span></td>
+        <td>ID evaluasi responden auto-increment.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">2</td>
+        <td><strong>periode</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Periode pencairan yang dievaluasi.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">3</td>
+        <td><strong>jenis</strong></td>
+        <td>TEXT</td>
+        <td>-</td>
+        <td>Kategori layanan: 'Tukin' atau 'Uang Makan'.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">4</td>
+        <td><strong>rating</strong></td>
+        <td>INTEGER</td>
+        <td>-</td>
+        <td>Skor kepuasan berupa nilai bintang 1 sampai 5.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">5</td>
+        <td><strong>created_at</strong></td>
+        <td>TIMESTAMPTZ</td>
+        <td>-</td>
+        <td>Waktu saat formulir evaluasi dikirim oleh pegawai.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>B. Skrip DDL SQL Pembuatan Struktur Tabel (PostgreSQL)</h3>
+  <pre>-- 1. TABEL STATUS TUKIN GLOBAL
+CREATE TABLE IF NOT EXISTS public.status_tukin_global (
+    id BIGINT PRIMARY KEY DEFAULT 1,
+    periode TEXT NOT NULL DEFAULT 'Bulan Berjalan',
+    current_step INTEGER NOT NULL DEFAULT 1 CHECK (current_step BETWEEN 1 AND 8),
+    estimasi TEXT DEFAULT 'Tahap Awal',
+    catatan TEXT DEFAULT '-',
+    is_rejected BOOLEAN NOT NULL DEFAULT false,
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 2. TABEL STATUS UANG MAKAN GLOBAL
+CREATE TABLE IF NOT EXISTS public.status_uang_makan_global (
+    id BIGINT PRIMARY KEY DEFAULT 1,
+    periode TEXT NOT NULL DEFAULT 'Bulan Berjalan',
+    current_step INTEGER NOT NULL DEFAULT 1 CHECK (current_step BETWEEN 1 AND 8),
+    estimasi TEXT DEFAULT 'Tahap Awal',
+    catatan TEXT DEFAULT '-',
+    is_rejected BOOLEAN NOT NULL DEFAULT false,
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 3. TABEL ARSIP PENCAIRAN
+CREATE TABLE IF NOT EXISTS public.arsip_pencairan (
+    id BIGSERIAL PRIMARY KEY,
+    periode TEXT NOT NULL,
+    jenis TEXT NOT NULL CHECK (jenis IN ('Tukin', 'Uang Makan')),
+    tanggal_cair TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- 4. TABEL RATING KEPUASAN
+CREATE TABLE IF NOT EXISTS public.rating_kepuasan (
+    id BIGSERIAL PRIMARY KEY,
+    periode TEXT NOT NULL,
+    jenis TEXT NOT NULL CHECK (jenis IN ('Tukin', 'Uang Makan')),
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Inisialisasi baris tunggal (id = 1) untuk tabel status operasional
+INSERT INTO public.status_tukin_global (id, periode, current_step, estimasi, catatan) 
+VALUES (1, 'April 2026', 1, '1-2 Hari Kerja', 'Proses rekap absensi dimulai')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.status_uang_makan_global (id, periode, current_step, estimasi, catatan) 
+VALUES (1, 'Maret 2026', 1, '1 Hari Kerja', 'Proses rekap absensi dimulai')
+ON CONFLICT (id) DO NOTHING;</pre>
+
+  <h2>III. DIAGRAM ALUR DATA SISTEM (DATA FLOW)</h2>
+
+  <h3>1. Alur Transaksi Pembaruan Data Realtime (End-to-End Flow)</h3>
+  <table class="flow-table">
+    <tr>
+      <td style="width: 22%;">
+        <div class="flow-box">
+          <div class="flow-title">[1] AKSI ADMIN</div>
+          <div class="flow-desc">Bendahara login & klik <strong>Lanjut Tahap</strong> di Command Center</div>
+        </div>
+      </td>
+      <td class="flow-arrow">➔</td>
+      <td style="width: 24%;">
+        <div class="flow-box">
+          <div class="flow-title">[2] DATABASE UPDATE</div>
+          <div class="flow-desc">Kueri UPDATE <code>current_step</code> & <code>updated_at</code> dieksekusi di tabel</div>
+        </div>
+      </td>
+      <td class="flow-arrow">➔</td>
+      <td style="width: 24%;">
+        <div class="flow-box-highlight">
+          <div class="flow-title">[3] REALTIME CDC</div>
+          <div class="flow-desc">Supabase memancarkan event perubahan via <em>WebSocket Channel</em></div>
+        </div>
+      </td>
+      <td class="flow-arrow">➔</td>
+      <td style="width: 24%;">
+        <div class="flow-box">
+          <div class="flow-title">[4] CLIENT UPDATE</div>
+          <div class="flow-desc">Layar ponsel pegawai berubah seketika tanpa perlu me-refresh halaman</div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <h3>2. Alur 8 Tahapan Siklus Pencairan Anggaran</h3>
+  <p>Tahapan pencairan pada kolom <code>current_step</code> memetakan standar operasional prosedur KPPN:</p>
+
+  <table class="step-table">
+    <thead>
+      <tr>
+        <th style="width: 8%; text-align: center;">Tahap</th>
+        <th style="width: 24%;">Nama Tahapan</th>
+        <th style="width: 22%;">Aktor / Unit Kerja</th>
+        <th style="width: 46%;">Uraian Alur & Efek Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 1</td>
+        <td><strong>Rekapitulasi Absensi</strong></td>
+        <td>Urusan Kepegawaian</td>
+        <td>Merekap data kehadiran pegawai dan perhitungan pemotongan hari kerja.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 2</td>
+        <td><strong>Pengesahan Rekap</strong></td>
+        <td>Pimpinan Satker</td>
+        <td>Verifikasi dan pengesahan surat rekapitulasi oleh pimpinan hierarki.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 3</td>
+        <td><strong>Perhitungan Nominal</strong></td>
+        <td>Bendahara Pengeluaran</td>
+        <td>Penghitungan nominal kotor, potongan PPh/BPJS, dan nominal bersih hak keuangan.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 4</td>
+        <td><strong>Gaji Web KPPN</strong></td>
+        <td>Aplikasi Kemenkeu</td>
+        <td>Penginputan dan sinkronisasi data nominatif ke portal Gaji Web KPPN.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 5</td>
+        <td><strong>Validasi SAKTI</strong></td>
+        <td>Aplikasi SAKTI Satker</td>
+        <td>Pengecekan pagu anggaran dan pencetakan Surat Permintaan Pembayaran (SPP).</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 6</td>
+        <td><strong>Pengajuan SPM</strong></td>
+        <td>Pejabat PPSPM</td>
+        <td>Penerbitan Surat Perintah Membayar (SPM) dan pengiriman digital ke KPPN.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold;">Step 7</td>
+        <td><strong>Verifikasi KPPN</strong></td>
+        <td>Petugas FO / KPPN</td>
+        <td>Pengujian berkas oleh KPPN. Jika ditolak, status berubah menjadi <em>Revisi SPM</em>.</td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-weight: bold; background: #ecfdf5; color: #047857;">Step 8</td>
+        <td><strong style="color: #047857;">Penerbitan SP2D (Cair)</strong></td>
+        <td>KPPN & Bank Persepsi</td>
+        <td>Surat Perintah Pencairan Dana terbit; dana ditransfer langsung ke rekening pegawai.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>3. Alur Penanganan Berkas Ditolak / Revisi KPPN (Exception Flow)</h3>
+  <div class="flow-step-box">
+    <div class="flow-step-num">Langkah 1: Verifikasi KPPN (Step 7) Mengalami Kendala</div>
+    <p>Apabila terdapat kesalahan data pada pengajuan SPM, KPPN menerbitkan penolakan / instruksi revisi.</p>
+  </div>
+  <div class="flow-step-box" style="border-left-color: #e11d48;">
+    <div class="flow-step-num" style="color: #e11d48;">Langkah 2: Bendahara Mengaktifkan Status Penolakan</div>
+    <p>Bendahara menekan tombol <strong>Tolak & Revisi (→ Step 6)</strong> pada panel admin. Basis data memperbarui record: <code>current_step = 6</code> dan <code>is_rejected = true</code>.</p>
+  </div>
+  <div class="flow-step-box" style="border-left-color: #e11d48;">
+    <div class="flow-step-num" style="color: #e11d48;">Langkah 3: Layar Pegawai Menampilkan Indikator Perbaikan Berkas</div>
+    <p>Tampilan aplikasi di seluruh ponsel pegawai otomatis berubah warna menjadi merah dengan label <em>"Perbaikan Berkas"</em> dan catatan revisi, sehingga pegawai memahami penyebab keterlambatan secara transparan.</p>
+  </div>
+  <div class="flow-step-box">
+    <div class="flow-step-num">Langkah 4: Pengajuan Ulang SPM</div>
+    <p>Setelah berkas diperbaiki, bendahara memajukan kembali status ke Step 7, dan flag <code>is_rejected</code> otomatis kembali bernilai <code>false</code>.</p>
+  </div>
+
+  <h3>4. Alur Pengarsipan & Reset Siklus Baru (Cycle Closure Flow)</h3>
+  <div class="flow-step-box">
+    <div class="flow-step-num">Fase A: Pencairan Berhasil & Formulir Evaluasi (Step 8)</div>
+    <p>Saat SP2D terbit (Step 8), aplikasi pegawai memicu animasi selebrasi (confetti) dan membuka widget rating kepuasan (1 s/d 5 bintang) yang tersimpan di tabel <code>rating_kepuasan</code>.</p>
+  </div>
+  <div class="flow-step-box">
+    <div class="flow-step-num">Fase B: Pengarsipan Riwayat Otomatis</div>
+    <p>Ketika memasuki bulan baru, Bendahara menekan tombol <strong>Arsipkan & Reset</strong>. Sistem mengeksekusi penyalinan data periode yang telah sukses cair ke dalam tabel <code>arsip_pencairan</code>.</p>
+  </div>
+  <div class="flow-step-box">
+    <div class="flow-step-num">Fase C: Reset Status Operasional</div>
+    <p>Data pada <code>status_tukin_global</code> direset kembali ke <code>current_step = 1</code>, <code>is_rejected = false</code>, estimasi disetel ke "Tahap Awal", dan siap digunakan untuk memantau periode anggaran yang baru.</p>
+  </div>
+
+</body>
+</html>

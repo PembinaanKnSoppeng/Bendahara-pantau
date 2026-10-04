@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gambaran Arsitektur & Skema Database SIMANTU - Kejaksaan Negeri Soppeng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #047857;
+      --primary-dark: #064e3b;
+      --primary-light: #10b981;
+      --primary-soft: #ecfdf5;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --amber-500: #f59e0b;
+      --rose-500: #f43f5e;
+      --indigo-500: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      line-height: 1.5;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* TOP BAR */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #047857, #10b981);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: white;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    .badge-satker {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-tab {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-light);
+      box-shadow: 0 4px 14px rgba(4, 120, 87, 0.4);
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 30px 24px 60px 24px;
+    }
+
+    /* VIEW SWITCHER */
+    .view-content {
+      display: none;
+    }
+
+    .view-content.active {
+      display: block;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HERO SECTION */
+    .hero-banner {
+      background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.15), transparent 50%),
+                  radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 50%),
+                  #131c31;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 36px 40px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #10b981, #6366f1, transparent);
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 30%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      max-width: 800px;
+      line-height: 1.6;
+    }
+
+    /* ARCHITECTURE DIAGRAM (THREE TIERS) */
+    .architecture-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 24px;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    @media (max-width: 1080px) {
+      .architecture-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .arch-card {
+      background: #151f34;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 26px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .arch-card:hover {
+      border-color: rgba(16, 185, 129, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-tag {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    .tag-admin { background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+    .tag-cloud { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-client { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    .arch-card h3 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .arch-card p {
+      font-size: 12.5px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* DATA FLOW ARROWS */
+    .flow-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .pulse-line {
+      height: 2px;
+      flex: 1;
+      background: linear-gradient(90deg, #6366f1, #10b981, #f59e0b);
+      position: relative;
+    }
+
+    /* SCHEMA TABLES SECTION */
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 40px 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 5px;
+      height: 22px;
+      background: var(--primary-light);
+      border-radius: 3px;
+    }
+
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-bottom: 40px;
+    }
+
+    .table-box {
+      background: #151f34;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .table-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .th-tukin { background: rgba(16, 185, 129, 0.12); border-top: 3px solid #10b981; }
+    .th-uang-makan { background: rgba(99, 102, 241, 0.12); border-top: 3px solid #6366f1; }
+    .th-arsip { background: rgba(245, 158, 11, 0.12); border-top: 3px solid #f59e0b; }
+    .th-rating { background: rgba(236, 72, 153, 0.12); border-top: 3px solid #ec4899; }
+
+    .table-name {
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 13px;
+      color: #ffffff;
+    }
+
+    .table-tag {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table-body {
+      padding: 8px 0;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 1.6fr;
+      padding: 8px 18px;
+      font-size: 11.5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      align-items: center;
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .col-name {
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pk-badge {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .col-type {
+      font-family: 'Fira Code', monospace;
+      color: #94a3b8;
+      font-size: 10.5px;
+    }
+
+    .col-desc {
+      color: #64748b;
+      font-size: 11px;
+    }
+
+    /* 8 STEPS VISUAL PIPELINE */
+    .steps-container {
+      background: #151f34;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 26px 30px;
+      margin-bottom: 40px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .step-item {
+      background: #1a2642;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .step-item:hover {
+      border-color: #10b981;
+      transform: translateY(-2px);
+    }
+
+    .step-item.final {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), #1a2642);
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      background: #047857;
+      color: white;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .step-icon {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .step-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #f8fafc;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .step-eta {
+      font-size: 9.5px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* PRESENTATION SLIDES MODE */
+    .slide-wrapper {
+      background: #131c31;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6);
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-header {
+      background: #18233c;
+      padding: 18px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .slide-number {
+      font-size: 12px;
+      font-weight: 800;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.15);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .slide-body {
+      padding: 40px 50px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .slide-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 14px;
+      letter-spacing: -0.5px;
+    }
+
+    .slide-desc {
+      font-size: 15px;
+      color: #94a3b8;
+      margin-bottom: 28px;
+      max-width: 900px;
+      line-height: 1.6;
+    }
+
+    .slide-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .scard {
+      background: #1a2642;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .scard-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .scard h4 {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .scard p {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .speaker-notes {
+      background: rgba(16, 185, 129, 0.08);
+      border-left: 4px solid #10b981;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .speaker-notes strong {
+      display: block;
+      font-size: 11px;
+      color: #34d399;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .speaker-notes p {
+      font-size: 13px;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .slide-footer {
+      background: #18233c;
+      padding: 16px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      padding: 10px 22px;
+      background: #253352;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: #047857;
+      border-color: #10b981;
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* PRINT STYLING */
+    @media print {
+      body {
+        background: white !important;
+        color: #0f172a !important;
+      }
+      .top-nav, .nav-controls, .btn-nav {
+        display: none !important;
+      }
+      .hero-banner, .arch-card, .table-box, .steps-container, .slide-wrapper {
+        background: white !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        color: #0f172a !important;
+        break-inside: avoid;
+      }
+      .table-name, .hero-title, .slide-title, .arch-card h3 {
+        color: #047857 !important;
+        -webkit-text-fill-color: initial !important;
+      }
+      .col-desc, .hero-subtitle, .slide-desc {
+        color: #475569 !important;
+      }
+      .table-row {
+        border-color: #e2e8f0 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAV -->
+  <header class="top-nav">
+    <div class="brand-group">
+      <div class="logo-badge">M</div>
+      <div class="brand-text">
+        <h1>SIMANTU <span class="badge-satker">Kejari Soppeng</span></h1>
+        <p>Visualisasi Arsitektur & Skema Basis Data Realtime</p>
+      </div>
+    </div>
+    <div class="nav-controls">
+      <button class="btn btn-tab active" id="btn-tab-overview" onclick="switchView('overview')">
+        🗺️ Peta Lengkap (Infografis)
+      </button>
+      <button class="btn btn-tab" id="btn-tab-slides" onclick="switchView('slides')">
+        📽️ Mode Presentasi Slide
+      </button>
+      <a href="gambaran-flowchart.html" class="btn btn-tab">
+        📐 Diagram Flowchart
+      </a>
+      <button class="btn btn-action" onclick="window.print()">
+        🖨️ Cetak / Simpan PDF
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- VIEW 1: OVERVIEW INFOGRAFIS -->
+    <div id="view-overview" class="view-content active">
+      
+      <!-- HERO BANNER -->
+      <section class="hero-banner">
+        <h2 class="hero-title">Ekosistem Data & Arsitektur SIMANTU</h2>
+        <p class="hero-subtitle">
+          Sistem Informasi Monitoring Tunjangan Kinerja dan Uang Makan Kejaksaan Negeri Soppeng memanfaatkan basis data PostgreSQL modern di Supabase Cloud dengan arsitektur <em>Single-State Pipeline</em> dan protokol <em>Change Data Capture (CDC) Realtime WebSockets</em>.
+        </p>
+      </section>
+
+      <!-- 3-TIER ARCHITECTURE -->
+      <div class="architecture-grid">
+        <!-- TIER 1 -->
+        <div class="arch-card">
+          <span class="card-tag tag-admin">Lapisan Input & Kontrol</span>
+          <h3>Admin Bendahara</h3>
+          <p>Portal kontrol terotentikasi untuk mengelola siklus pencairan 8 tahapan.</p>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#4338ca;">🔐</span>
+              <span>Supabase Auth (JWT Session)</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#0284c7;">⚡</span>
+              <span>Aksi Lanjut Tahap / Mundur</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#e11d48;">⚠️</span>
+              <span>Prosedur Tolak & Revisi KPPN</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#059669;">🗂️</span>
+              <span>Arsip Otomatis Periode Baru</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- TIER 2 -->
+        <div class="arch-card" style="border-color: rgba(16, 185, 129, 0.4);">
+          <span class="card-tag tag-cloud">Mesin Utama (Cloud Database)</span>
+          <h3>Supabase PostgreSQL Hub</h3>
+          <p>Pusat persistensi data dengan latensi rendah dan auto-broadcast.</p>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#047857;">🎯</span>
+              <span>Pola Singleton (id = 1, Query O(1))</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#059669;">📡</span>
+              <span>Realtime Engine (WebSockets)</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#d97706;">📦</span>
+              <span>Tabel Riwayat Pencairan (Arsip)</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#db2777;">⭐</span>
+              <span>Tabel Rating Indeks Kepuasan</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- TIER 3 -->
+        <div class="arch-card">
+          <span class="card-tag tag-client">Lapisan Konsumsi Publik</span>
+          <h3>Pegawai Kejari Soppeng</h3>
+          <p>Tampilan ramah pengguna via Smartphone (PWA) & Browser PC tanpa refresh.</p>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#059669;">📱</span>
+              <span>Auto-Update Tanpa Reload Halaman</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#0284c7;">📊</span>
+              <span>Progress Bar Visual 0% - 100%</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#d97706;">🎉</span>
+              <span>Animasi Confetti Saat SP2D Cair</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon" style="background:#2563eb;">💬</span>
+              <span>Integrasi Bantuan WhatsApp</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- VISUAL 8 STEPS -->
+      <section class="steps-container">
+        <h3 style="font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 4px;">Alur 8 Tahapan Pencairan Standar KPPN</h3>
+        <p style="font-size: 12px; color: #94a3b8;">Nilai <code>current_step</code> (1-8) merepresentasikan progres dokumen keuangan:</p>
+        <div class="steps-grid">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-icon">📋</span>
+            <div class="step-title">Rekap Absensi</div>
+            <div class="step-eta">1-2 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-icon">✍️</span>
+            <div class="step-title">Pengesahan</div>
+            <div class="step-eta">1 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-icon">🧮</span>
+            <div class="step-title">Hitung Nominal</div>
+            <div class="step-eta">1 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-icon">💻</span>
+            <div class="step-title">Gaji Web</div>
+            <div class="step-eta">1 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-icon">🔐</span>
+            <div class="step-title">SAKTI KPPN</div>
+            <div class="step-eta">1 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-icon">📄</span>
+            <div class="step-title">Pengajuan SPM</div>
+            <div class="step-eta">1-2 Hari</div>
+          </div>
+          <div class="step-item">
+            <span class="step-num">7</span>
+            <span class="step-icon">🏛️</span>
+            <div class="step-title">Verifikasi KPPN</div>
+            <div class="step-eta">1-3 Hari</div>
+          </div>
+          <div class="step-item final">
+            <span class="step-num" style="background:#10b981;">8</span>
+            <span class="step-icon">💰</span>
+            <div class="step-title" style="color:#34d399;">SP2D Terbit!</div>
+            <div class="step-eta" style="color:#6ee7b7; font-weight:800;">Dana Cair 🎉</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCHEMA TABLES -->
+      <h3 class="section-title">Struktur Skema 4 Tabel Database</h3>
+      <div class="tables-grid">
+        
+        <!-- TABLE 1 -->
+        <div class="table-box">
+          <div class="table-header th-tukin">
+            <span class="table-name">status_tukin_global</span>
+            <span class="table-tag" style="background:rgba(16,185,129,0.2); color:#34d399;">Single-State</span>
+          </div>
+          <div class="table-body">
+            <div class="table-row">
+              <div class="col-name"><span class="pk-badge">PK</span> id</div>
+              <div class="col-type">bigint</div>
+              <div class="col-desc">Fixed = 1 (Singleton)</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">periode</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Nama bulan (misal: "April 2026")</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">current_step</div>
+              <div class="col-type">integer</div>
+              <div class="col-desc">Angka posisi tahapan (1-8)</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">estimasi</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Perkiraan durasi / ETA</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">catatan</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Pengumuman / Alasan revisi</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">is_rejected</div>
+              <div class="col-type">boolean</div>
+              <div class="col-desc">Flag tolak berkas dari KPPN</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">updated_at</div>
+              <div class="col-type">timestamptz</div>
+              <div class="col-desc">Waktu modifikasi terakhir</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE 2 -->
+        <div class="table-box">
+          <div class="table-header th-uang-makan">
+            <span class="table-name">status_uang_makan_global</span>
+            <span class="table-tag" style="background:rgba(99,102,241,0.2); color:#a5b4fc;">Single-State</span>
+          </div>
+          <div class="table-body">
+            <div class="table-row">
+              <div class="col-name"><span class="pk-badge">PK</span> id</div>
+              <div class="col-type">bigint</div>
+              <div class="col-desc">Fixed = 1 (Singleton)</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">periode</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Nama bulan uang makan</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">current_step</div>
+              <div class="col-type">integer</div>
+              <div class="col-desc">Tahapan uang makan (1-8)</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">estimasi</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Target waktu selesai</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">catatan</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Papan info pengumuman</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">is_rejected</div>
+              <div class="col-type">boolean</div>
+              <div class="col-desc">Status penolakan KPPN</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">updated_at</div>
+              <div class="col-type">timestamptz</div>
+              <div class="col-desc">Timestamp update realtime</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE 3 -->
+        <div class="table-box">
+          <div class="table-header th-arsip">
+            <span class="table-name">arsip_pencairan</span>
+            <span class="table-tag" style="background:rgba(245,158,11,0.2); color:#fcd34d;">Historical Log</span>
+          </div>
+          <div class="table-body">
+            <div class="table-row">
+              <div class="col-name"><span class="pk-badge">PK</span> id</div>
+              <div class="col-type">bigserial</div>
+              <div class="col-desc">Auto-increment ID</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">periode</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Periode yang telah SP2D</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">jenis</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">'Tukin' / 'Uang Makan'</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">tanggal_cair</div>
+              <div class="col-type">timestamptz</div>
+              <div class="col-desc">Waktu pembukuan sukses</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLE 4 -->
+        <div class="table-box">
+          <div class="table-header th-rating">
+            <span class="table-name">rating_kepuasan</span>
+            <span class="table-tag" style="background:rgba(236,72,153,0.2); color:#f472b6;">Crowdsource</span>
+          </div>
+          <div class="table-body">
+            <div class="table-row">
+              <div class="col-name"><span class="pk-badge">PK</span> id</div>
+              <div class="col-type">bigserial</div>
+              <div class="col-desc">Auto-increment ID</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">periode</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">Periode yang dinilai</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">jenis</div>
+              <div class="col-type">text</div>
+              <div class="col-desc">'Tukin' / 'Uang Makan'</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">rating</div>
+              <div class="col-type">integer</div>
+              <div class="col-desc">Skor bintang 1 sampai 5</div>
+            </div>
+            <div class="table-row">
+              <div class="col-name">created_at</div>
+              <div class="col-type">timestamptz</div>
+              <div class="col-desc">Waktu respon dicatat</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: PRESENTATION SLIDES MODE -->
+    <div id="view-slides" class="view-content">
+      
+      <div class="slide-wrapper">
+        
+        <!-- HEADER SLIDE -->
+        <div class="slide-header">
+          <span class="badge-satker">Kejaksaan Negeri Soppeng • SIMANTU</span>
+          <span class="slide-number" id="slide-indicator">Slide 1 dari 5</span>
+        </div>
+
+        <!-- BODY SLIDE -->
+        <div class="slide-body" id="slide-container">
+          <!-- Slide contents will be dynamically injected by JS -->
+        </div>
+
+        <!-- FOOTER SLIDE -->
+        <div class="slide-footer">
+          <div style="font-size: 12px; color: #94a3b8;">
+            Gunakan tombol <strong>Prev</strong> / <strong>Next</strong> atau tombol panah keyboard (&larr; / &rarr;)
+          </div>
+          <div class="nav-buttons">
+            <button class="btn-nav" id="btn-prev" onclick="prevSlide()">&larr; Sebelumnya</button>
+            <button class="btn-nav" id="btn-next" onclick="nextSlide()">Selanjutnya &rarr;</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    // VIEW SWITCHER
+    function switchView(viewName) {
+      document.querySelectorAll('.view-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
+
+      if (viewName === 'overview') {
+        document.getElementById('view-overview').classList.add('active');
+        document.getElementById('btn-tab-overview').classList.add('active');
+      } else {
+        document.getElementById('view-slides').classList.add('active');
+        document.getElementById('btn-tab-slides').classList.add('active');
+        renderSlide();
+      }
+    }
+
+    // SLIDES DATA
+    const slides = [
+      {
+        title: "1. Landasan & Arsitektur Cloud Database",
+        desc: "SIMANTU mengadopsi platform PostgreSQL berstandar enterprise yang di-host di Supabase Cloud, didukung oleh mesin Change Data Capture (CDC) berbasis WebSockets.",
+        cards: [
+          { icon: "☁️", title: "Cloud High Availability", text: "Terpusat di cloud Supabase, menjamin uptime tinggi tanpa membebani infrastruktur server fisik di Kejaksaan Negeri Soppeng." },
+          { icon: "⚡", title: "Single-State Efficiency", text: "Menggunakan Record Tunggal (id=1) untuk proses yang sedang berjalan, menghasilkan waktu pencarian seketika O(1)." },
+          { icon: "📡", title: "Zero-Polling Realtime", text: "Perangkat pegawai tidak menguras kuota dengan me-reload web terus menerus; data didorong otomatis saat ada perubahan." }
+        ],
+        notes: "Izin Bapak/Ibu pimpinan, database SIMANTU dirancang bukan sekadar tempat penyimpanan arsip, melainkan sebagai mesin sinkronisasi data keuangan real-time. Dengan arsitektur cloud terdistribusi, pegawai mendapatkan kepastian informasi pencairan secara instan dan transparan langsung di smartphone masing-masing."
+      },
+      {
+        title: "2. Struktur Skema 4 Tabel Utama",
+        desc: "Model data dirancang ringkas, modular, dan bersih, terbagi atas tabel status operasional, tabel riwayat, dan tabel survei kepuasan.",
+        cards: [
+          { icon: "📊", title: "status_tukin_global", text: "Menyimpan posisi langkah ke-1 s/d ke-8, estimasi, status revisi, dan pengumuman untuk Tunjangan Kinerja." },
+          { icon: "🍱", title: "status_uang_makan_global", text: "Menyimpan seluruh parameter pelacakan hak keuangan Uang Makan secara terisolasi dan independen." },
+          { icon: "🗄️", title: "arsip_pencairan & rating", text: "Tabel arsip mencatat histori sukses SP2D tiap bulan, sedangkan tabel rating menampung umpan balik anonim pegawai." }
+        ],
+        notes: "Kami membedakan tabel pelacakan Tukin dan Uang Makan agar proses keduanya dapat berjalan independen tanpa saling mengunci. Selain itu, kami melengkapinya dengan tabel arsip historis serta tabel rating indeks kepuasan aparatur."
+      },
+      {
+        title: "3. Mekanisme Sinkronisasi Real-Time (WebSockets)",
+        desc: "Bagaimana proses data mengalir dari laptop Bendahara ke ratusan layar ponsel pegawai dalam hitungan milidetik tanpa intervensi manual.",
+        cards: [
+          { icon: "👨‍💻", title: "Aksi Bendahara", text: "Bendahara menekan tombol 'Lanjut Tahap' atau 'Tolak Berkas' pada Command Center Admin terotentikasi." },
+          { icon: "🔄", title: "PostgreSQL Event", text: "Database mengeksekusi UPDATE baris id=1, memicu Postgres Changes yang dipancarkan oleh engine Supabase Realtime." },
+          { icon: "📱", title: "Instant Client UI", text: "Layar pegawai menangkap sinyal WebSocket; Progress Bar bergerak, teks estimasi berganti, dan bila cair muncul efek confetti!" }
+        ],
+        notes: "Inilah keunggulan utama teknologi SIMANTU: saat bendahara memajukan tahapan di kantor, dalam sepersekian detik seluruh ponsel pegawai yang membuka aplikasi langsung terbarui secara otomatis tanpa mereka harus menekan tombol refresh."
+      },
+      {
+        title: "4. Alur 8 Tahapan Keuangan Standar KPPN",
+        desc: "Implementasi integer current_step (1 s/d 8) yang memetakan seluruh Standard Operating Procedure (SOP) perbendaharaan negara.",
+        cards: [
+          { icon: "📋", title: "Tahap 1 - 3 (Internal Satker)", text: "Mulai dari Rekap Absensi, Pengesahan pimpinan hierarki, hingga Perhitungan nominal di aplikasi internal." },
+          { icon: "💻", title: "Tahap 4 - 6 (Kemenkeu & KPPN)", text: "Sinkronisasi Gaji Web, validasi anggaran pada aplikasi SAKTI, dan penerbitan Surat Perintah Membayar (SPM)." },
+          { icon: "🏛️", title: "Tahap 7 - 8 (Verifikasi & SP2D)", text: "Pengujian oleh KPPN. Bila ada revisi sistem beralih ke warna merah, dan jika lolos dana cair masuk rekening!" }
+        ],
+        notes: "Skema angka 1 sampai 8 ini bukan angka sembarangan, melainkan cerminan dari siklus resmi perbendaharaan negara: mulai dari absensi satker, penginputan SAKTI, verifikasi KPPN, hingga terbitnya SP2D."
+      },
+      {
+        title: "5. Akuntabilitas & Indeks Kepuasan Pegawai",
+        desc: "Mendukung Zona Integritas (ZI) Menuju WBK/WBBM melalui transparansi tata kelola dan pengukuran kualitas layanan publik internal.",
+        cards: [
+          { icon: "📜", title: "Transparansi Riwayat", text: "Pegawai dapat membuka modal riwayat untuk melihat arsip bulan-bulan sebelumnya yang telah sukses cair." },
+          { icon: "⭐", title: "Survei Kepuasan Digital", text: "Penilaian bintang 1 s/d 5 secara objektif dan anonim untuk mengukur persepsi kecepatan layanan bendahara." },
+          { icon: "📄", title: "Laporan PDF Siap Cetak", text: "Admin dapat mengunduh dan mencetak rekapitulasi indeks kepuasan sebagai bukti dukung evaluasi reformasi birokrasi." }
+        ],
+        notes: "Sebagai penutup, sistem database ini dirancang untuk memperkuat Zona Integritas Kejaksaan Negeri Soppeng. Keberadaan data arsip dan indeks kepuasan menjadi bukti konkret keterbukaan informasi dan komitmen pelayanan prima di satuan kerja."
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide() {
+      const slide = slides[currentSlide];
+      document.getElementById('slide-indicator').textContent = `Slide ${currentSlide + 1} dari ${slides.length}`;
+      
+      const cardsHtml = slide.cards.map(c => `
+        <div class="scard">
+          <span class="scard-icon">${c.icon}</span>
+          <h4>${c.title}</h4>
+          <p>${c.text}</p>
+        </div>
+      `).join('');
+
+      document.getElementById('slide-container').innerHTML = `
+        <h2 class="slide-title">${slide.title}</h2>
+        <p class="slide-desc">${slide.desc}</p>
+        <div class="slide-cards">${cardsHtml}</div>
+        <div class="speaker-notes">
+          <strong>Catatan Pembicara (Script Presentasi Anda):</strong>
+          <p>"${slide.notes}"</p>
+        </div>
+      `;
+
+      document.getElementById('btn-prev').disabled = (currentSlide === 0);
+      document.getElementById('btn-next').disabled = (currentSlide === slides.length - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        renderSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide();
+      }
+    }
+
+    // KEYBOARD NAVIGATION
+    document.addEventListener('keydown', (e) => {
+      const slidesView = document.getElementById('view-slides');
+      if (slidesView.classList.contains('active')) {
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          prevSlide();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
